@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Pomodoros</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Content</th>
+      <th>Node</th>
+      <th>User</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @pomodoros.each do |pomodoro| %>
+      <tr>
+        <td><%= pomodoro.content %></td>
+        <td><%= pomodoro.node_id %></td>
+        <td><%= pomodoro.user_id %></td>
+        <td><%= link_to 'Show', pomodoro %></td>
+        <td><%= link_to 'Edit', edit_pomodoro_path(pomodoro) %></td>
+        <td><%= link_to 'Destroy', pomodoro, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Pomodoro', new_pomodoro_path %>

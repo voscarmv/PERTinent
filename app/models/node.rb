@@ -1,4 +1,6 @@
 class Node < ApplicationRecord
+  has_many :pomodoro
+  
   has_many :to_links, foreign_key: :from_id, class_name: :Link #tricky!
   has_many :to_nodes, through: :to_links  
 

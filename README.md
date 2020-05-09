@@ -1,24 +1,10 @@
-# README
+# PERTinent
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A [pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) journal organized using the [PERT](https://en.wikipedia.org/wiki/Program_evaluation_and_review_technique) project management technique. A succesor to my [Pomodori](https://github.com/voscarmv/pomodori) project.
 
-Things you may want to cover:
+Currently under construciton.
 
-* Ruby version
+## Software used
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[Devise](https://github.com/heartcombo/devise)
+[This digraph model](http://www.rixiform.com/2007/10/22/directed-graphs-in-ruby-on-rails/)

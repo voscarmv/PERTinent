@@ -6,5 +6,5 @@ Currently under construciton.
 
 ## Software used
 
-[Devise](https://github.com/heartcombo/devise)
-[This digraph model](http://www.rixiform.com/2007/10/22/directed-graphs-in-ruby-on-rails/)
+- [Devise](https://github.com/heartcombo/devise)
+- [This digraph model](http://www.rixiform.com/2007/10/22/directed-graphs-in-ruby-on-rails/)

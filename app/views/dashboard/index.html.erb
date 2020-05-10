@@ -1,0 +1,6 @@
+<h1>Work breakdown structure<h1>
+
+<% @edges.each { |e| %>
+  <%= e.from_node %>, 
+  <%= e.to_node %> | 
+<% } %>

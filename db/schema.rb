@@ -10,22 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_09_020637) do
+ActiveRecord::Schema.define(version: 2020_05_10_201155) do
 
   create_table "links", force: :cascade do |t|
     t.integer "from_id"
     t.integer "to_id"
-    t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "project_id", null: false
+    t.index ["project_id"], name: "index_links_on_project_id"
   end
 
   create_table "nodes", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "project_id", null: false
+    t.index ["project_id"], name: "index_nodes_on_project_id"
   end
 
   create_table "pomodoros", force: :cascade do |t|
@@ -34,6 +36,15 @@ ActiveRecord::Schema.define(version: 2020_05_09_020637) do
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_projects_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -48,4 +59,7 @@ ActiveRecord::Schema.define(version: 2020_05_09_020637) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "links", "projects"
+  add_foreign_key "nodes", "projects"
+  add_foreign_key "projects", "users"
 end

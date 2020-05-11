@@ -2,7 +2,9 @@ class DashboardController < ApplicationController
   def index
 
     if current_user
-      @edges = Link.find_by user_id: current_user.id
+      userid = current_user.project.first.id
+      @vertices = Node.where project_id: userid
+      @edges = Link.where project_id: userid
     end
     
   end
@@ -18,3 +20,4 @@ end
 # Link.create(:from_node => c, :to_node => d, :project_id => 1)
 # Link.create(:from_node => b, :to_node => d, :project_id => 1)
 # Link.create(:from_node => d, :to_node => a, :project_id => 1)
+

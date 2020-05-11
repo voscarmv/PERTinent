@@ -1,6 +1,36 @@
 <h1>Work breakdown structure<h1>
 
 <% @edges.each { |e| %>
-  <%= e.from_node %>, 
-  <%= e.to_node %> | 
+  <%= e.from_node.name %>, 
+  <%= e.to_node.name %> <br> 
 <% } %>
+
+<%
+
+    graph = [
+      %w(a b),
+      %w(b c),
+      %w(c d),
+      %w(b d),
+      %w(d a)
+    ]
+    
+    nodes = %w(a b c d)
+    
+    levels = []
+    root = "d"
+    row = [root]
+    levels.push(row)
+    nodes.reject!{|node| row.include?(node) }  
+    
+    while nodes.length > 0 do
+      row2 = graph.select { |edge| row.include?(edge[1]) }.map { |x| x[0] }.uniq.select{|node| nodes.include?(node)}
+      levels.push(row2)
+      graph.reject!{ |edge| row.include?(edge[1]) }
+      nodes.reject!{ |node| row2.include?(node) }  
+      row = row2
+    end
+    
+    levels
+
+%>

@@ -15,6 +15,9 @@ class ProjectsController < ApplicationController
   # GET /projects/new
   def new
     @project = Project.new
+    if current_user
+      @project.user_id = current_user.id
+    end
   end
 
   # GET /projects/1/edit

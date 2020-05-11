@@ -24,8 +24,13 @@ class DashboardController < ApplicationController
         nodes = nodes.reject{ |node| row2.include?(node) }  
         row = row2
       end
-      
-      @rows = levels
+
+      @rows = []
+      levels.each{ |lv| 
+        @rows.push(Node.where("id IN (#{lv.join(',')})"))
+      }
+
+
 
     end
     

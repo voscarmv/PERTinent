@@ -1,9 +1,13 @@
 <h1>Work breakdown structure<h1>
 
+<% i = 0%>
 <% @rows.each { |r| %>
+  <% j = 0 %>
   <% r.each { |node| %>
-    <%= node.name %>, 
+    <%= i %> <%= j %> <%= node.name %>, 
+    <% j += 1 %>
   <% } %>
   <br>
+  <% i += 1 %>
 <% } %>
   

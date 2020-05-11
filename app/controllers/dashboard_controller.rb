@@ -3,8 +3,33 @@ class DashboardController < ApplicationController
 
     if current_user
       userid = current_user.project.first.id
-      @vertices = Node.where project_id: userid
-      @edges = Link.where project_id: userid
+
+      links = Node.where project_id: userid      
+      nodes = Link.where project_id: userid
+      
+      levels = []
+      root = "d"
+      row = [root]
+      levels.push(row)
+      nodes = nodes.reject{|node| row.include?(node) }  
+
+      p row
+      p nodes
+      
+      # while nodes.length > 0 do
+      #   row2 =
+      #     links.select { |edge| row.include?(edge[1]) }
+      #     .map { |x| x[0] }
+      #     .uniq.select{|node| nodes
+      #     .include?(node)}
+      #   levels.push(row2)
+      #   links = links.reject{ |edge| row.include?(edge[1]) }
+      #   nodes = nodes.reject{ |node| row2.include?(node) }  
+      #   row = row2
+      # end
+      
+      @rows = levels
+
     end
     
   end

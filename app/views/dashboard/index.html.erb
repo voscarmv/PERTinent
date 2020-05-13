@@ -5,7 +5,7 @@
   <% j = 0 %>
   <div class="d-flex justify-content-around m-5">
   <% r.each { |node| %>
-    <div class="rounded bg-success p-3" id="<%= i %>_<%= j %>_<%= node.id %>_<%= node.name %>">
+    <div class="rounded bg-success p-3" id="#<%= i %>_<%= j %>_<%= node.id %>_<%= node.name %>">
       <%= node.name %>
     </div> 
     <% j += 1 %>
@@ -13,5 +13,9 @@
   </div>
   <% i += 1 %>
 <% } %>
+
+<script>
+  var fromController = "<%= @my_var %>";
+</script>
 
 <%= javascript_pack_tag 'test' %>

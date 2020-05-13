@@ -34,6 +34,8 @@ class DashboardController < ApplicationController
         @rows.push(Node.where("id IN (#{lv.join(',')})"))
       }
 
+      @my_var = "Hello form the controller"
+
     end
     
   end

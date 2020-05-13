@@ -5,7 +5,9 @@ class DashboardController < ApplicationController
       prjid = current_user.project.first.id
 
       links = Link.where(project_id: prjid).pluck("from_id, to_id")
+      p links
       nodes = Node.where(project_id: prjid).pluck("id")
+      p nodes
       
       levels = []
       root = 4
@@ -25,12 +27,12 @@ class DashboardController < ApplicationController
         row = row2
       end
 
+      p levels
+
       @rows = []
       levels.each{ |lv| 
         @rows.push(Node.where("id IN (#{lv.join(',')})"))
       }
-
-
 
     end
     

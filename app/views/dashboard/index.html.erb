@@ -1,11 +1,24 @@
 <h1>Work breakdown structure</h1>
 
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="3" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" />
+    </marker>
+  </defs>
+  <g fill="none" stroke="black" stroke-width="2" marker-end="url(#arrowhead)">
+    <path id="arrowLeft"/>
+    <path id="arrowRight"/>
+  </g>
+</svg>
+
 <% i = 0 %>
 <% @rows.each { |r| %>
   <% j = 0 %>
   <div class="d-flex justify-content-around m-5">
   <% r.each { |node| %>
-    <div class="rounded bg-success p-3" id="#<%= i %>_<%= j %>_<%= node.id %>_<%= node.name %>">
+    <div class="rounded bg-success p-3" id="x<%= i %>_<%= j %>_<%= node.id %>_<%= node.name %>">
       <%= node.name %>
     </div> 
     <% j += 1 %>
@@ -14,8 +27,11 @@
   <% i += 1 %>
 <% } %>
 
+<div id="a">Div 1</div>
+<div id="b">Div 2</div>
+
 <script>
   var fromController = "<%= @my_var %>";
 </script>
 
-<%= javascript_pack_tag 'test' %>
+<%= javascript_pack_tag 'arrows' %>

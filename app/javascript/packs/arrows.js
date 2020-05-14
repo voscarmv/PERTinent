@@ -38,13 +38,15 @@ var drawConnector = function() {
   arrowRight.setAttribute("d", dStrRight);
 };
 
-$("#a, #b").draggable({
-  drag: function(event, ui) {
-    drawConnector();
-  }
-});
+// $("#x0_0_4_d, #x0_0_4_d").draggable({
+//   drag: function(event, ui) {
+//     drawConnector();
+//   }
+// });
 
-setTimeout(drawConnector, 250);
+drawConnector();
+
+// setTimeout(drawConnector, 250);
 /* The setTimeout delay here is only required to prevent
  * the initial appearance of the arrows from being
  * incorrect due to the animated expansion of the

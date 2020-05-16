@@ -3,9 +3,11 @@ var divB       = document.querySelector("#b");
 var arrowLeft  = document.querySelector("#arrowLeft");
 var arrowRight = document.querySelector("#arrowRight");
 
-var drawConnector = function(divA, divB) {
-  console.log($(divA).position());
-  console.log($(divB).position());
+var drawConnector = function(divA, divB, edge) {
+  let pA = $(divA).position();
+  let pB = $(divB).position();
+console.log(edge);
+  $(edge).attr("d", "M"+pA.left+" "+pA.top+" L"+pB.left+" "+pB.top);
   // var posnALeft = {
   //   x: divA.offsetLeft - 8,
   //   y: divA.offsetTop  + divA.offsetHeight / 2
@@ -46,10 +48,10 @@ var drawConnector = function(divA, divB) {
 //   }
 // });
 
-edges.forEach(edge => {
-  drawConnector('#n_'+edge[0], '#n_'+edge[1]);
+edges.forEach(function(edge, i) {
+  drawConnector('#n_'+edge[0], '#n_'+edge[1], '#e_'+i);
 });
-drawConnector();
+// drawConnector();
 
 // setTimeout(drawConnector, 250);
 /* The setTimeout delay here is only required to prevent

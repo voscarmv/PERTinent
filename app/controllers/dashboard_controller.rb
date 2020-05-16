@@ -5,9 +5,10 @@ class DashboardController < ApplicationController
       prjid = current_user.project.first.id
 
       links = Link.where(project_id: prjid).pluck("from_id, to_id")
-      p links
+      links_cpy = links.clone
+      # p links
       nodes = Node.where(project_id: prjid).pluck("id")
-      p nodes
+      # p nodes
       
       levels = []
       root = 4
@@ -27,14 +28,14 @@ class DashboardController < ApplicationController
         row = row2
       end
 
-      p levels
+      # p levels
 
       @rows = []
       levels.each{ |lv| 
         @rows.push(Node.where("id IN (#{lv.join(',')})"))
       }
 
-      @my_var = "Hello form the controller"
+      @my_var = links_cpy.to_s
 
     end
     

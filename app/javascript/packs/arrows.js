@@ -45,6 +45,16 @@ var drawConnector = function(divA, divB, edge) {
     curvey = edgeyB;
   }
 
+  if(xA == xB){
+    curvex += 120;
+    if(yA > yB){
+      curvey = edgeyA + ((edgeyB - edgeyA) / 2);
+    }
+    if(yB > yA){
+      curvey = edgeyB + ((edgeyA - edgeyB) / 2);
+    }
+  }
+
   if(yA == yB){
     edgexA = xA + wA / 2;
     edgeyA -= 0;
@@ -59,4 +69,10 @@ var drawConnector = function(divA, divB, edge) {
 
 edges.forEach(function(edge, i) {
   drawConnector('#n_'+edge[0], '#n_'+edge[1], '#e_'+i);
+});
+
+$(window).resize(function(){
+  edges.forEach(function(edge, i) {
+    drawConnector('#n_'+edge[0], '#n_'+edge[1], '#e_'+i);
+  });
 });

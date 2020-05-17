@@ -46,12 +46,12 @@ var drawConnector = function(divA, divB, edge) {
   }
 
   if(yA == yB){
-    edgexA = xA + wA;
-    edgeyA = yA + hA / 2;
-    edgexB = xB - 10;
-    edgeyB = yB + hB / 2;
+    edgexA = xA + wA / 2;
+    edgeyA -= 0;
+    edgexB = xB + wB / 2;
+    edgeyB -= 5;
     curvex = edgexA + ((edgexB - edgexA) / 2);
-    curvey = edgeyA - 70;
+    curvey = edgeyA - 140;
   }
 
   $(edge).attr("d", "M"+edgexA+" "+edgeyA+" Q"+curvex+" "+curvey+" "+edgexB+" "+edgeyB);

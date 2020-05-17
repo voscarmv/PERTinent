@@ -2,7 +2,7 @@
 
 A [pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) journal organized using [PERT](https://en.wikipedia.org/wiki/Program_evaluation_and_review_technique). A succesor to my [Pomodori](https://github.com/voscarmv/pomodori) project.
 
-Currently under construciton.
+Currently under construction.
 
 ## Software used
 

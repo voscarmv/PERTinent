@@ -1,63 +1,51 @@
-var divA       = document.querySelector("#a");
-var divB       = document.querySelector("#b");
-var arrowLeft  = document.querySelector("#arrowLeft");
-var arrowRight = document.querySelector("#arrowRight");
 
 var drawConnector = function(divA, divB, edge) {
-  let pA = $(divA).position();
-  let pB = $(divB).position();
-console.log(edge);
-  $(edge).attr("d", "M"+pA.left+" "+pA.top+" L"+pB.left+" "+pB.top);
-  // var posnALeft = {
-  //   x: divA.offsetLeft - 8,
-  //   y: divA.offsetTop  + divA.offsetHeight / 2
-  // };
-  // var posnARight = {
-  //   x: divA.offsetLeft + divA.offsetWidth + 8,
-  //   y: divA.offsetTop  + divA.offsetHeight / 2    
-  // };
-  // var posnBLeft = {
-  //   x: divB.offsetLeft - 8,
-  //   y: divB.offsetTop  + divB.offsetHeight / 2
-  // };
-  // var posnBRight = {
-  //   x: divB.offsetLeft + divB.offsetWidth + 8,
-  //   y: divB.offsetTop  + divB.offsetHeight / 2
-  // };
-  // var dStrLeft =
-  //     "M" +
-  //     (posnALeft.x      ) + "," + (posnALeft.y) + " " +
-  //     "C" +
-  //     (posnALeft.x - 100) + "," + (posnALeft.y) + " " +
-  //     (posnBLeft.x - 100) + "," + (posnBLeft.y) + " " +
-  //     (posnBLeft.x      ) + "," + (posnBLeft.y);
-  // arrowLeft.setAttribute("d", dStrLeft);
-  // var dStrRight =
-  //     "M" +
-  //     (posnBRight.x      ) + "," + (posnBRight.y) + " " +
-  //     "C" +
-  //     (posnBRight.x + 100) + "," + (posnBRight.y) + " " +
-  //     (posnARight.x + 100) + "," + (posnARight.y) + " " +
-  //     (posnARight.x      ) + "," + (posnARight.y);
-  // arrowRight.setAttribute("d", dStrRight);
-};
+  let elemA = $(divA)
+  let elemB = $(divB)
 
-// $("#x0_0_4_d, #x0_0_4_d").draggable({
-//   drag: function(event, ui) {
-//     drawConnector();
-//   }
-// });
+  let pA = elemA.position();
+  let pB = elemB.position();
+
+  let wA = elemA.outerWidth();
+  let hA = elemA.outerHeight();
+  let wB = elemB.outerWidth();
+  let hB = elemB.outerHeight();
+
+  console.log(wA);
+
+  let xA = pA.left;
+  let yA = pA.top;
+  let xB = pB.left;
+  let yB = pB.top;
+
+  let edgexA = xA;
+  let edgeyA = yA;
+  let edgexB = xB;
+  let edgeyB = yB;
+  let curvex = edgexB;
+  let curvey = edgeyA;
+
+  if(yA > yB){
+    edgexA = xA + wA / 2;
+    edgeyA -= 0;
+    edgexB = xB + wB / 2;
+    edgeyB = yB + hB + 10;
+    curvex = edgexB;
+    curvey = edgeyA;
+    }
+
+  if(yB > yA){
+    edgexB = xB + wB / 2;
+    edgexB -= 0;
+    edgexA = xA + wA / 2;
+    edgeyA = yA + hA + 10;
+    curvex = edgexA;
+    curvey = edgeyB;
+  }
+
+  $(edge).attr("d", "M"+edgexA+" "+edgeyA+" Q"+curvex+" "+curvey+" "+edgexB+" "+edgeyB);
+};
 
 edges.forEach(function(edge, i) {
   drawConnector('#n_'+edge[0], '#n_'+edge[1], '#e_'+i);
 });
-// drawConnector();
-
-// setTimeout(drawConnector, 250);
-/* The setTimeout delay here is only required to prevent
- * the initial appearance of the arrows from being
- * incorrect due to the animated expansion of the
- * Stack Overflow code snippet results after clicking
- * "Run Code Snippet." If this was a simpler website,
- * a simple command, i.e. `drawConnector();` would suffice.
- */

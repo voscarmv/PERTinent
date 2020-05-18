@@ -10,7 +10,7 @@
     <% else %>
     <div class="rounded bg-success p-3 node" id="n_<%= node.id %>">
       <h2><%= node.name %></h2>
-      <%= link_to 'Connect here', links_path(link: {from_id: @link.from_id, to_id: node.id, project_id: @link.project_id}), method: :post %>
+      <%= link_to 'Connect here', links_path(link: {from_id: @link.from_id, to_id: node.id, project_id: @link.project_id}), method: :post, class: "btn btn-primary btn-sm text-white" %>
     </div>
     <% end %>
   <% } %>

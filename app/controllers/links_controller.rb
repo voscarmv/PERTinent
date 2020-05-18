@@ -4,7 +4,7 @@ class LinksController < ApplicationController
   # GET /links
   # GET /links.json
   def index
-    @links = Link.all
+    @links = Link.includes(:from_node).includes(:to_node).all
   end
 
   # GET /links/1
@@ -69,6 +69,6 @@ class LinksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def link_params
-      params.require(:link).permit(:from_id, :to_id, :user_id)
+      params.require(:link).permit(:from_id, :to_id, :project_id)
     end
 end

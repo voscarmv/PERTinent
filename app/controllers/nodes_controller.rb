@@ -69,6 +69,6 @@ class NodesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def node_params
-      params.require(:node).permit(:name, :description, :user_id)
+      params.require(:node).permit(:name, :description, :project_id)
     end
 end

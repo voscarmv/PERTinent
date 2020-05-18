@@ -11,7 +11,7 @@ class DashboardController < ApplicationController
       # p nodes
       
       levels = []
-      root = 4
+      root = Node.includes(:to_links).references(:to_links).where("to_id IS NULL").first.id
       row = [root]
       levels.push(row)
       nodes = nodes.reject{|node| row.include?(node) }  

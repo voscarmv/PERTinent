@@ -1,3 +1,39 @@
+<h1>Work breakdown structure</h1>
+
+<% @rows.each { |r| %>
+  <div class="d-flex justify-content-around m-5">
+  <% r.each { |node| %>
+    <div class="rounded bg-success p-3 node" id="n_<%= node.id %>">
+      <h2><%= node.name %></h2>
+      <%= link_to 'Add subtask', new_node_path(link: {parent_node: node.id}, node: {project_id: @project.id})%>
+    </div>
+  <% } %>
+  </div>
+  <div class="d-flex m-5"></div>
+  <div class="d-flex m-5"></div>
+<% } %>
+
+<svg xmlns="http://www.w3.org/2020/svg" id="svg_bg" style="width:100%; position: absolute; top: 0; z-index: -1;">
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" />
+    </marker>
+  </defs>
+  <g fill="none" stroke="black" stroke-width="2" marker-end="url(#arrowhead)">
+    
+    <% (0..@edges.length).each { |i| %>
+    <path id="e_<%= i %>"/>
+    <% } %>
+  </g>
+</svg>
+
+<script>
+  const edges = <%= @edges.to_s %>;
+  console.log(edges);
+</script>
+
+<%= javascript_pack_tag 'arrows' %>
+
 <p id="notice"><%= notice %></p>
 
 <p>

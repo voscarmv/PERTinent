@@ -10,6 +10,41 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
+    if current_user
+      prjid = @project.id
+
+      links = Link.where(project_id: prjid).pluck("from_id, to_id")
+      @edges = links.clone
+      # p links
+      nodes = Node.where(project_id: prjid).pluck("id")
+      # p nodes
+      
+      levels = []
+      root = Node.includes(:to_links).references(:to_links).where("to_id IS NULL").first.id
+      row = [root]
+      levels.push(row)
+      nodes = nodes.reject{|node| row.include?(node) }  
+      
+      while nodes.length > 0 do
+        row2 =
+          links.select { |edge| row.include?(edge[1]) }
+          .map { |x| x[0] }
+          .uniq.select{|node| nodes
+          .include?(node)}
+        levels.push(row2)
+        links = links.reject{ |edge| row.include?(edge[1]) }
+        nodes = nodes.reject{ |node| row2.include?(node) }  
+        row = row2
+      end
+
+      # p levels
+
+      @rows = []
+      levels.each{ |lv| 
+        @rows.push(Node.where("id IN (#{lv.join(',')})"))
+      }
+
+    end
   end
 
   # GET /projects/new

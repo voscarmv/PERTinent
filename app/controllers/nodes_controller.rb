@@ -14,7 +14,12 @@ class NodesController < ApplicationController
 
   # GET /nodes/new
   def new
-    @node = Node.new
+    @node = Node.new(node_params)
+    if link_params
+      if link_params[:parent_node]
+        session[:parent_node] = link_params[:parent_node]
+      end  
+    end
   end
 
   # GET /nodes/1/edit
@@ -28,6 +33,11 @@ class NodesController < ApplicationController
 
     respond_to do |format|
       if @node.save
+        if session[:parent_node]
+          @link = Link.new(from_node: @node, to_node: Node.where(id: session[:parent_node]).first, project_id: node_params[:project_id])
+          @link.save
+          session[:parent_node] = nil
+        end
         format.html { redirect_to @node, notice: 'Node was successfully created.' }
         format.json { render :show, status: :created, location: @node }
       else
@@ -70,5 +80,9 @@ class NodesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def node_params
       params.require(:node).permit(:name, :description, :project_id)
+    end
+
+    def link_params
+      params.require(:link).permit(:parent_node)
     end
 end

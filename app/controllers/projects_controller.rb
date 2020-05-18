@@ -17,6 +17,7 @@ class ProjectsController < ApplicationController
       @edges = links.clone
       # p links
       nodes = Node.where(project_id: prjid).pluck("id")
+      @vertices = nodes.clone
       # p nodes
       
       levels = []

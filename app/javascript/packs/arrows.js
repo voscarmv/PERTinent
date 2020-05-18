@@ -31,18 +31,18 @@ var drawConnector = function(divA, divB, edge) {
     edgexA = xA + wA / 2;
     edgeyA -= 0;
     edgexB = xB + wB / 2;
-    edgeyB = yB + hB + 10;
+    edgeyB = yB + hB + 8;
     curvex = edgexB;
     curvey = edgeyA;
     }
 
   if(yB > yA){
     edgexB = xB + wB / 2;
-    edgexB -= 0;
+    edgeyB -= 8;
     edgexA = xA + wA / 2;
-    edgeyA = yA + hA + 10;
-    curvex = edgexA;
-    curvey = edgeyB;
+    edgeyA = yA + hA;
+    curvex = edgexB;
+    curvey = edgeyA;
   }
 
   if(xA == xB){

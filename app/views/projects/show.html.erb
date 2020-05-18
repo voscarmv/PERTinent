@@ -3,9 +3,12 @@
 <% @rows.each { |r| %>
   <div class="d-flex justify-content-around m-5">
   <% r.each { |node| %>
-    <div class="rounded bg-success p-3 node" id="n_<%= node.id %>">
+    <div class="rounded bg-success opacity-90 p-3 node" id="n_<%= node.id %>">
       <h2><%= node.name %></h2>
-      <%= link_to 'Add subtask', new_node_path(link: {parent_node: node.id}, node: {project_id: @project.id})%>
+      <ul>
+        <li><%= link_to 'Add subtask', new_node_path(link: {parent_node: node.id}, node: {project_id: @project.id})%></li>
+        <li><%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id})%></li>
+      </ul>
     </div>
   <% } %>
   </div>

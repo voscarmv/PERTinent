@@ -5,13 +5,13 @@ var drawConnector = function(divA, divB, edge, stroke) {
   let elemA = $(divA)
   let elemB = $(divB)
 
-  let pA = elemA.position();
-  let pB = elemB.position();
+  let pA = elemA.offset();
+  let pB = elemB.offset();
 
-  let wA = elemA.outerWidth();
-  let hA = elemA.outerHeight();
-  let wB = elemB.outerWidth();
-  let hB = elemB.outerHeight();
+  let wA = elemA.innerWidth();
+  let hA = elemA.innerHeight();
+  let wB = elemB.innerWidth();
+  let hB = elemB.innerHeight();
 
   console.log(wA);
 

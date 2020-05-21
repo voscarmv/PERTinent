@@ -1,4 +1,4 @@
-[SOFTWARE NAME] Copyright (YEAR) (COPYRIGHT HOLDER(S)/AUTHOR(S))(“Licensor”)
+[PERTinent] Copyright (2020) (Vicente Oscar Mier Vela)(“Licensor”)
 
 Hippocratic License Version Number: 2.1.
 

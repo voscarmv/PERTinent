@@ -39,6 +39,7 @@ class NodesController < ApplicationController
           session[:parent_node] = nil
         end
         format.html { redirect_to Project.where(id: @node.project_id).first, notice: 'Node was successfully created.' }
+        # format.html { redirect_to projects_url, notice: 'Node was successfully created.' }
         format.json { render :show, status: :created, location: @node }
       else
         format.html { render :new }

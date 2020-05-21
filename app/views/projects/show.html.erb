@@ -1,5 +1,13 @@
 <h1>Work breakdown structure</h1>
 
+<% root_node = @rows.shift[0] %>
+<div class="d-flex flex-wrap align-content-between justify-content-around m-5">
+  <div class="rounded bg-primary opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= root_node.id %>">
+    <h2><%= root_node.name %></h2>
+    <p><%= link_to 'Add subtask', new_node_path(link: {parent_node: root_node.id}, node: {project_id: @project.id}), class: "btn btn-primary btn-sm text-white"%></p>
+  </div>
+</div>
+
 <% @rows.each { |r| %>
   <div class="d-flex flex-wrap align-content-between justify-content-around m-5">
   <% r.each { |node| %>

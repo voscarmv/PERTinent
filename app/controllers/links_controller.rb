@@ -26,9 +26,18 @@ class LinksController < ApplicationController
       # p nodes
       
       levels = []
-      root = Node.includes(:to_links).references(:to_links).where("to_id IS NULL").first.id
+      root = Node.where(project_id: prjid).order(:created_at).limit(1).first.id
       row = [root]
       levels.push(row)
+
+      @rows = []
+      unless nodes.count > 1 
+        levels.each{ |lv| 
+          @rows.push(Node.where("id IN (#{lv.join(',')})"))
+        }
+        return
+      end
+
       nodes = nodes.reject{|node| row.include?(node) }  
       
       while nodes.length > 0 do
@@ -45,7 +54,6 @@ class LinksController < ApplicationController
 
       # p levels
 
-      @rows = []
       levels.each{ |lv| 
         @rows.push(Node.where("id IN (#{lv.join(',')})"))
       }

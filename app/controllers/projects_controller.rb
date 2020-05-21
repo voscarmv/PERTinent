@@ -17,13 +17,24 @@ class ProjectsController < ApplicationController
       @edges = links.clone
       # p links
       nodes = Node.where(project_id: prjid).pluck("id")
+      # root = 0
+      # nodes.push(root)
       @vertices = nodes.clone
       # p nodes
-      
+
       levels = []
-      root = Node.includes(:to_links).references(:to_links).where("to_id IS NULL").first.id
+      root = Node.where(project_id: prjid).order(:created_at).limit(1).first.id
       row = [root]
       levels.push(row)
+
+      @rows = []
+      unless nodes.count > 1 
+        levels.each{ |lv| 
+          @rows.push(Node.where("id IN (#{lv.join(',')})"))
+        }
+        return
+      end
+
       nodes = nodes.reject{|node| row.include?(node) }  
       
       while nodes.length > 0 do
@@ -33,14 +44,16 @@ class ProjectsController < ApplicationController
           .uniq.select{|node| nodes
           .include?(node)}
         levels.push(row2)
+        puts "row2 #{row2}"
         links = links.reject{ |edge| row.include?(edge[1]) }
+        puts "links #{links}"
         nodes = nodes.reject{ |node| row2.include?(node) }  
+        puts "nodes #{nodes}"
         row = row2
       end
 
       # p levels
 
-      @rows = []
       levels.each{ |lv| 
         @rows.push(Node.where("id IN (#{lv.join(',')})"))
       }
@@ -67,6 +80,7 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       if @project.save
+        Node.create(name: @project.name, description: @project.description, project_id: @project.id)
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
         format.json { render :show, status: :created, location: @project }
       else

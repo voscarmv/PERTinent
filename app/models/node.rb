@@ -16,9 +16,12 @@ class Node < ApplicationRecord
   def check_if_root
     unless destroyed_by_association
       root = Node.where(project_id: project_id).order(:created_at).limit(1).first.id
+      if from_nodes.exists?
+        raise Error.new "Can't delete parent node."
+      end
       if id == root
-        raise Error.new "Can't delete root node"
-      end  
+        raise Error.new "Can't delete root node."
+      end
     end
   end
 end

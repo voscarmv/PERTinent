@@ -11,10 +11,14 @@ class Node < ApplicationRecord
   has_many :from_links, foreign_key: :to_id, class_name: :Link #tricky!
   has_many :from_nodes, through: :from_links
 
+  has_one :project
+
   def check_if_root
-    root = Node.where(project_id: project_id).order(:created_at).limit(1).first.id
-    if id == root
-      raise Error.new "Can't delete root node"
+    unless destroyed_by_association
+      root = Node.where(project_id: project_id).order(:created_at).limit(1).first.id
+      if id == root
+        raise Error.new "Can't delete root node"
+      end  
     end
   end
 end

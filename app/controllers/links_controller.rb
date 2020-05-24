@@ -98,9 +98,10 @@ class LinksController < ApplicationController
   # DELETE /links/1
   # DELETE /links/1.json
   def destroy
+    parent_project = @link.from_node.project
     @link.destroy
     respond_to do |format|
-      format.html { redirect_to links_url, notice: 'Link was successfully destroyed.' }
+      format.html { redirect_to parent_project, notice: 'Link was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

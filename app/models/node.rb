@@ -5,13 +5,13 @@ class Node < ApplicationRecord
 
   has_many :pomodoro
   
-  has_many :to_links, foreign_key: :from_id, class_name: :Link #tricky!
+  has_many :to_links, foreign_key: :from_id, class_name: :Link, dependent: :destroy
   has_many :to_nodes, through: :to_links  
 
   has_many :from_links, foreign_key: :to_id, class_name: :Link #tricky!
   has_many :from_nodes, through: :from_links
 
-  has_one :project
+  belongs_to :project
 
   def check_if_root
     unless destroyed_by_association

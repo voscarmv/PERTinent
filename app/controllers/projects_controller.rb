@@ -30,7 +30,7 @@ class ProjectsController < ApplicationController
       @rows = []
       unless nodes.count > 1 
         levels.each{ |lv| 
-          @rows.push(Node.where("id IN (#{lv.join(',')})"))
+          @rows.push(Node.where("id IN (#{lv.join(',')})").includes(:from_nodes))
         }
         return
       end
@@ -55,7 +55,7 @@ class ProjectsController < ApplicationController
       # p levels
 
       levels.each{ |lv| 
-        @rows.push(Node.where("id IN (#{lv.join(',')})"))
+        @rows.push(Node.where("id IN (#{lv.join(',')})").includes(:from_nodes))
       }
 
     end

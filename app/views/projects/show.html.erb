@@ -15,6 +15,23 @@
       <h2><%= node.name %></h2>
       <p><%= link_to 'Add subtask', new_node_path(link: {parent_node: node.id}, node: {project_id: @project.id}), class: "btn btn-primary btn-sm text-white"%></p>
       <p><%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id}), class: "btn btn-primary btn-sm text-white"%></p>
+      <% unless node.from_nodes.exists? %>
+        <p><%= link_to 'Delete this node', node, method: :delete, class: "btn btn-danger btn-sm text-white" %></p>
+      <% end %>
+      <% if node.from_links.or(node.to_links).exists? %>
+      <ul>
+        <% if node.to_links.count > 1 %>
+          <% node.to_links.each { |to_link| %>
+            <li><%= link_to "Delete to_link #{to_link.id}", to_link, method: :delete, class: "btn btn-danger btn-sm text-white" %></li>
+          <% } %>
+        <% end %>
+        <% node.from_links.each { |from_link| %>
+          <% if from_link.from_node.to_links.count > 1 %>
+            <li><%= link_to "Delete from_link #{from_link.id}", from_link, method: :delete, class: "btn btn-danger btn-sm text-white" %></li>
+          <% end %>
+        <% } %>
+      </ul>
+      <% end %>
     </div>
   <% } %>
   </div>

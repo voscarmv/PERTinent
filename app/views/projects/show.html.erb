@@ -19,18 +19,23 @@
         <p><%= link_to 'Delete this node', node, method: :delete, class: "btn btn-danger btn-sm text-white" %></p>
       <% end %>
       <% if node.from_links.or(node.to_links).exists? %>
-      <ul>
-        <% if node.to_links.count > 1 %>
-          <% node.to_links.each { |to_link| %>
-            <li><%= link_to "Delete to_link #{to_link.id}", to_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete", id: "l_#{to_link.from_id}_#{to_link.to_id}" %></li>
-          <% } %>
-        <% end %>
-        <% node.from_links.each { |from_link| %>
-          <% if from_link.from_node.to_links.count > 1 %>
-            <li><%= link_to "Delete from_link #{from_link.id}", from_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete", id: "l_#{from_link.from_id}_#{from_link.to_id}" %></li>
+      <div class="dropdown">
+        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Delete links
+        </button>
+        <div class="dropdown-menu">
+          <% if node.to_links.count > 1 %>
+            <% node.to_links.each { |to_link| %>
+              <%= link_to "Delete link to #{to_link.to_node.name}", to_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete", id: "l_#{to_link.from_id}_#{to_link.to_id}" %>
+            <% } %>
           <% end %>
-        <% } %>
-      </ul>
+          <% node.from_links.each { |from_link| %>
+            <% if from_link.from_node.to_links.count > 1 %>
+              <%= link_to "Delete link from #{from_link.from_node.name}", from_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete", id: "l_#{from_link.from_id}_#{from_link.to_id}" %>
+            <% end %>
+          <% } %>
+        </div>
+      </div>
       <% end %>
     </div>
   <% } %>

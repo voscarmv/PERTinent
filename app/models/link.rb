@@ -10,7 +10,7 @@ class Link < ApplicationRecord
 
   def check_if_orphan
     unless destroyed_by_association
-      unless Link.last.from_node.to_nodes.count > 1
+      unless from_node.to_nodes.count > 1
         raise Error.new "Can't leave orphaned node."
       end  
     end

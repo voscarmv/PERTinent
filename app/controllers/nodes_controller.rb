@@ -66,9 +66,10 @@ class NodesController < ApplicationController
   # DELETE /nodes/1.json
   def destroy
     parent_project = @node.project
+    parent_node = @node.to_nodes.first
     @node.destroy
     respond_to do |format|
-      format.html { redirect_to parent_project, notice: 'Node was successfully destroyed.' }
+      format.html { redirect_to project_path(parent_project, anchor: "n_#{parent_node.id}"), notice: 'Node was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

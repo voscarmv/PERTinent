@@ -72,7 +72,7 @@ class LinksController < ApplicationController
 
     respond_to do |format|
       if @link.save
-        format.html { redirect_to Project.where(id: @link.project_id).first, notice: 'Link was successfully created.' }
+        format.html { redirect_to project_path(Project.where(id: @link.project_id).first, anchor: "n_#{@link.from_node.id}"), notice: 'Link was successfully created.' }
         format.json { render :show, status: :created, location: @link }
       else
         format.html { render :new }
@@ -99,9 +99,10 @@ class LinksController < ApplicationController
   # DELETE /links/1.json
   def destroy
     parent_project = @link.from_node.project
+    parent_node = @link.from_node
     @link.destroy
     respond_to do |format|
-      format.html { redirect_to parent_project, notice: 'Link was successfully destroyed.' }
+      format.html { redirect_to project_path(parent_project, anchor: "n_#{parent_node.id}"), notice: 'Link was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

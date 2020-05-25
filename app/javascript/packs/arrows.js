@@ -13,7 +13,7 @@ var drawConnector = function(divA, divB, edge, stroke) {
   let wB = elemB.innerWidth();
   let hB = elemB.innerHeight();
 
-  console.log(wA);
+  // console.log(wA);
 
   let xA = pA.left;
   let yA = pA.top;
@@ -70,7 +70,7 @@ var drawConnector = function(divA, divB, edge, stroke) {
 };
 
 nodes.forEach(function(node){
-  $('#n_'+node).mouseover(function(){
+  $('#n_'+node).mouseenter(function(){
     edges.forEach(function(edge, i) {
       if (edge[0] == node){
         drawConnector('#n_'+edge[0], '#n_'+edge[1], '#e_'+i, "fuchsia");
@@ -80,7 +80,7 @@ nodes.forEach(function(node){
       }
     });
   });
-  $('#n_'+node).mouseout(function(){
+  $('#n_'+node).mouseleave(function(){
     edges.forEach(function(edge, i) {
       if (edge[0] == node){
         drawConnector('#n_'+edge[0], '#n_'+edge[1], '#e_'+i, "black");
@@ -100,4 +100,28 @@ $(window).resize(function(){
   edges.forEach(function(edge, i) {
     drawConnector('#n_'+edge[0], '#n_'+edge[1], '#e_'+i, "black");
   });
+});
+
+let prevcolor = "black";
+
+$(".link_delete").each(function(){
+  let nodes = $(this).attr("id").split('_');
+
+  $(this).mouseenter(function(){
+    edges.forEach(function(edge, i) {
+      if (edge[0] == nodes[1] && edge[1] == nodes[2]){
+        prevcolor = $('#e_'+i).attr('stroke');
+        drawConnector('#n_'+edge[0], '#n_'+edge[1], '#e_'+i, "orange");
+      }
+    });
+  });
+
+  $(this).mouseleave(function(){
+    edges.forEach(function(edge, i) {
+      if (edge[0] == nodes[1] && edge[1] == nodes[2]){
+        drawConnector('#n_'+edge[0], '#n_'+edge[1], '#e_'+i, prevcolor);
+      }
+    });
+  });
+
 });

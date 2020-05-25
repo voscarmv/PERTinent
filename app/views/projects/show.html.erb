@@ -22,12 +22,12 @@
       <ul>
         <% if node.to_links.count > 1 %>
           <% node.to_links.each { |to_link| %>
-            <li><%= link_to "Delete to_link #{to_link.id}", to_link, method: :delete, class: "btn btn-danger btn-sm text-white" %></li>
+            <li><%= link_to "Delete to_link #{to_link.id}", to_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete", id: "l_#{to_link.from_id}_#{to_link.to_id}" %></li>
           <% } %>
         <% end %>
         <% node.from_links.each { |from_link| %>
           <% if from_link.from_node.to_links.count > 1 %>
-            <li><%= link_to "Delete from_link #{from_link.id}", from_link, method: :delete, class: "btn btn-danger btn-sm text-white" %></li>
+            <li><%= link_to "Delete from_link #{from_link.id}", from_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete", id: "l_#{from_link.from_id}_#{from_link.to_id}" %></li>
           <% end %>
         <% } %>
       </ul>
@@ -46,6 +46,9 @@
       <path d="M 0 0 L 10 5 L 0 10 z" />
     </marker>
     <marker id="arrowheadblack" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto" stroke="black" fill="black">
+      <path d="M 0 0 L 10 5 L 0 10 z" />
+    </marker>
+    <marker id="arrowheadorange" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto" stroke="orange" fill="orange">
       <path d="M 0 0 L 10 5 L 0 10 z" />
     </marker>
   </defs>

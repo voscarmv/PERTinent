@@ -26,6 +26,19 @@
     <%= form.number_field :project_id %>
   </div>
 
+  <%= form.fields_for :to_links do |to_links_form| %>
+    <li>
+      <%= to_links_form.label :from_id %>
+      <%= to_links_form.text_field :from_id %>
+
+      <%= to_links_form.label :to_id %>
+      <%= to_links_form.text_field :to_id %>
+
+      <%= to_links_form.label :project_id %>
+      <%= to_links_form.text_field :project_id %>
+    </li>
+  <% end %>
+
   <div class="actions">
     <%= form.submit %>
   </div>

@@ -13,6 +13,8 @@ class Node < ApplicationRecord
 
   belongs_to :project
 
+  accepts_nested_attributes_for :to_links
+
   def check_if_root
     unless destroyed_by_association
       root = Node.where(project_id: project_id).order(:created_at).limit(1).first.id

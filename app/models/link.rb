@@ -3,7 +3,7 @@ class Link < ApplicationRecord
   class Error < StandardError
   end
 
-  belongs_to :from_node, foreign_key: :from_id, class_name: :Node 
+  belongs_to :from_node, foreign_key: :from_id, class_name: :Node, optional: true
   belongs_to :to_node, foreign_key: :to_id, class_name: :Node 
 
   belongs_to :project

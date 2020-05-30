@@ -11,7 +11,7 @@ class Node < ApplicationRecord
   has_many :from_links, foreign_key: :to_id, class_name: :Link #tricky!
   has_many :from_nodes, through: :from_links
 
-  belongs_to :project
+  belongs_to :project, optional: true
 
   accepts_nested_attributes_for :to_links
 

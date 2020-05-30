@@ -63,10 +63,10 @@ class ProjectsController < ApplicationController
 
   # GET /projects/new
   def new
-    @project = Project.new
-    if current_user
-      @project.user_id = current_user.id
-    end
+    @project = Project.new(project_params)
+    # if current_user
+    #   @project.user_id = current_user.id
+    # end
   end
 
   # GET /projects/1/edit
@@ -80,7 +80,8 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       if @project.save
-        Node.create(name: @project.name, description: @project.description, project_id: @project.id)
+        @project.nodes.first.update(name: @project.name)
+        # Node.create(name: @project.name, description: @project.description, project_id: @project.id)
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
         format.json { render :show, status: :created, location: @project }
       else
@@ -122,6 +123,6 @@ class ProjectsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def project_params
-      params.require(:project).permit(:name, :description, :user_id)
+      params.require(:project).permit(:name, :description, :user_id, nodes_attributes: [:name])
     end
 end

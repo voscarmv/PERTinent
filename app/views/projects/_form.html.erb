@@ -26,6 +26,13 @@
     <%= form.text_field :user_id %>
   </div>
 
+  <%= form.fields_for :nodes do |nodes_form| %>
+    <li>
+      <%= nodes_form.label :name %>
+      <%= nodes_form.text_field :name %>
+    </li>
+  <% end %>
+
   <div class="actions">
     <%= form.submit %>
   </div>

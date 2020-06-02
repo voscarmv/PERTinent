@@ -13,6 +13,12 @@
   <% r.each { |node| %>
     <div class="rounded bg-success opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= node.id %>">
       <h2><%= node.name %></h2>
+      <%= form_with(model: node) do |form| %>
+        <div class="field">
+        <%= form.label :complete %>
+        <%= form.check_box :complete, onchange: 'this.form.submit();' %>
+        </div>
+      <% end %>
       <p><%= link_to 'Add subtask', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "btn btn-primary btn-sm text-white"%></p>
       <p><%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "btn btn-primary btn-sm text-white" %></p>
       <div class="dropdown">

@@ -54,7 +54,8 @@ class NodesController < ApplicationController
   def update
     respond_to do |format|
       if @node.update(node_params)
-        format.html { redirect_to @node, notice: 'Node was successfully updated.' }
+        parent_project = @node.project
+        format.html { redirect_to project_path(parent_project, anchor: "n_#{@node.id}"), notice: 'Node was successfully updated.' }
         format.json { render :show, status: :ok, location: @node }
       else
         format.html { render :edit }
@@ -83,7 +84,7 @@ class NodesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def node_params
-      params.require(:node).permit(:name, :description, :project_id, to_links_attributes: [:to_id, :project_id])
+      params.require(:node).permit(:name, :description, :project_id, :complete, to_links_attributes: [:to_id, :project_id])
     end
 
     # def link_params

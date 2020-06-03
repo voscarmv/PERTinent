@@ -81,6 +81,7 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.save
         @project.nodes.first.update(name: @project.name)
+        @project.nodes.first.update(description: @project.description)
         # Node.create(name: @project.name, description: @project.description, project_id: @project.id)
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
         format.json { render :show, status: :created, location: @project }

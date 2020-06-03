@@ -4,12 +4,21 @@
 <div class="d-flex flex-wrap align-content-between justify-content-around m-5">
   <div class="rounded bg-primary opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= root_node.id %>">
     <h2><%= root_node.name %></h2>
+    <%= form_with(model: root_node) do |form| %>
+      <div class="field">
+      <%= form.label :complete %>
+      <%= form.check_box :complete, onchange: 'this.form.submit();' %>
+      </div>
+    <% end %>
+    <% if root_node.description then %>
+    <p><%= root_node.description %></p>
+    <% end %>
     <p><%= link_to 'Add subtask', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: root_node.id, project_id: @project.id}]}), class: "btn btn-primary btn-sm text-white"%></p>
   </div>
 </div>
 
 <% @rows.each { |r| %>
-  <div class="d-flex flex-wrap align-content-between justify-content-around m-5">
+  <div class="d-flex align-content-between justify-content-around m-5">
   <% r.each { |node| %>
     <div class="rounded bg-success opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= node.id %>">
       <h2><%= node.name %></h2>
@@ -19,10 +28,27 @@
         <%= form.check_box :complete, onchange: 'this.form.submit();' %>
         </div>
       <% end %>
-      <p><%= link_to 'Add subtask', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "btn btn-primary btn-sm text-white"%></p>
-      <p><%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "btn btn-primary btn-sm text-white" %></p>
-      <div class="dropdown">
-        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <% if node.description then %>
+      <p><%= node.description %></p>
+      <% end %>
+
+      <p>
+      <%= link_to 'Start Pomodoro', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "btn btn-primary btn-sm text-white m-1"%>
+      <%= link_to 'View pomodoros', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "btn btn-primary btn-sm text-white m-1" %>
+      </p>
+
+      <p>
+      <%= link_to 'Edit task', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "btn btn-warning btn-sm text-black m-1"%>
+      <%= link_to 'Add subtask', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "btn btn-warning btn-sm text-black m-1"%>
+      <%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "btn btn-warning btn-sm text-black m-1" %>
+      </p>
+
+      </p>
+      <% unless node.from_nodes.exists? %>
+      <%= link_to 'Delete this node', node, method: :delete, class: "btn btn-danger btn-sm text-white m-1" %>
+      <% end %>
+      <div class="dropdown d-inline-block m-1">
+        <button class="btn btn-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Delete links
         </button>
         <div class="dropdown-menu">
@@ -38,9 +64,7 @@
           <% } %>
         </div>
       </div>
-      <% unless node.from_nodes.exists? %>
-      <p><%= link_to 'Delete this node', node, method: :delete, class: "mt-3 btn btn-danger btn-sm text-white" %></p>
-      <% end %>
+      </p>
     </div>
   <% } %>
   </div>

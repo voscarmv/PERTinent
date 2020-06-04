@@ -4,7 +4,7 @@ class PomodorosController < ApplicationController
   # GET /pomodoros
   # GET /pomodoros.json
   def index
-    @pomodoros = Pomodoro.all
+    @pomodoros = Pomodoro.where(node_id: pomodoro_params[:node_id])
   end
 
   # GET /pomodoros/1
@@ -14,7 +14,7 @@ class PomodorosController < ApplicationController
 
   # GET /pomodoros/new
   def new
-    @pomodoro = Pomodoro.new
+    @pomodoro = Pomodoro.new(pomodoro_params)
   end
 
   # GET /pomodoros/1/edit
@@ -69,6 +69,6 @@ class PomodorosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def pomodoro_params
-      params.require(:pomodoro).permit(:content, :node_id, :user_id)
+      params.require(:pomodoro).permit(:content, :node_id)
     end
 end

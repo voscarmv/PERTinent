@@ -33,12 +33,12 @@
       <% end %>
 
       <p>
-      <%= link_to 'Start Pomodoro', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "btn btn-primary btn-sm text-white m-1"%>
-      <%= link_to 'View pomodoros', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "btn btn-primary btn-sm text-white m-1" %>
+      <%= link_to 'Start Pomodoro', new_pomodoro_path(pomodoro: {node_id: node.id}), class: "btn btn-primary btn-sm text-white m-1"%>
+      <%= link_to 'View pomodoros', pomodoros_path(pomodoro: {node_id: node.id}), class: "btn btn-primary btn-sm text-white m-1" %>
       </p>
 
       <p>
-      <%= link_to 'Edit task', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "btn btn-warning btn-sm text-black m-1"%>
+      <%= link_to 'Edit task', edit_node_path(node), class: "btn btn-warning btn-sm text-black m-1"%>
       <%= link_to 'Add subtask', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "btn btn-warning btn-sm text-black m-1"%>
       <%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "btn btn-warning btn-sm text-black m-1" %>
       </p>

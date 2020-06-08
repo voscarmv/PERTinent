@@ -15,6 +15,10 @@ class Node < ApplicationRecord
 
   accepts_nested_attributes_for :to_links
 
+  def children_incomplete 
+    self.from_nodes.where(complete: false).count > 0
+  end
+
   def check_if_root
     unless destroyed_by_association
       root = Node.where(project_id: project_id).order(:created_at).limit(1).first.id

@@ -18,9 +18,9 @@
 </div>
 
 <% @rows.each { |r| %>
-  <div class="d-flex align-content-between justify-content-around m-5">
+  <div class="d-flex flex-wrap align-content-between justify-content-around m-5">
   <% r.each { |node| %>
-    <div class="rounded bg-success opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= node.id %>">
+    <div class="rounded <%= node.children_incomplete ? "bg-secondary" : ( node.complete ? "bg-success" : "bg-warning" ) %> opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= node.id %>">
       <h2><%= node.name %></h2>
       <%= form_with(model: node) do |form| %>
         <div class="field">
@@ -38,9 +38,9 @@
       </p>
 
       <p>
-      <%= link_to 'Edit task', edit_node_path(node), class: "btn btn-warning btn-sm text-black m-1"%>
-      <%= link_to 'Add subtask', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "btn btn-warning btn-sm text-black m-1"%>
-      <%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "btn btn-warning btn-sm text-black m-1" %>
+      <%= link_to 'Add subtask', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "border-white btn btn-warning btn-sm text-black m-1"%>
+      <%= link_to 'Edit task', edit_node_path(node), class: "btn btn-warning btn-sm text-black m-1 border-white"%>
+      <%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "border-white btn btn-warning btn-sm text-black m-1" %>
       </p>
 
       </p>

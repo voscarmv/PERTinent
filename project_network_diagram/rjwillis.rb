@@ -91,8 +91,19 @@ table.each{ |r|
       end
     end
     if ix != e
+      if plot[i-1][ix] == " v "
+        plot[i][ix] = " | "
+        plot[i+1][ix] = " v "
+        plot[i+2][ix] = " | "
+        plot[i+3][ix] = " | "
+        plot[i+4][ix] = " v "
+      end
       if lf
         plot[i][ix] = "<--"
+        plot[i+1][ix] = "   "
+        plot[i+2][ix] = "   "
+        plot[i+3][ix] = "   "
+        plot[i+4][ix] = "   "
       end
       if rf
         if plot[i-1][ix] == " v "
@@ -114,5 +125,5 @@ table.each{ |r|
 
 puts "PLOT"
 plot.each{ |r|
-  p r
+  puts r.join
 }

@@ -61,3 +61,58 @@ puts "FINAL TABLE"
 table.each{ |r|
   p r
 }
+
+plot = Array.new()
+
+plot.push(Array.new(table[0].length,"   "))
+i = 1
+table.each{ |r|
+  5.times{
+    plot.push(Array.new(r.length,"   "))
+  }
+  e = r.index { |c| c != 0 }
+  plot[i][e] = "---"
+  plot[i+1][e] = " #{r[e]} "
+  plot[i+2][e] = "---"
+  lf = false
+  rf = false
+  r.reverse.each_with_index{ |v, j|
+    ix = r.length - 1 - j
+    if v != 0
+      plot[i+3][ix] = " | "
+      plot[i+4][ix] = " v "
+      if ix != e
+        # puts "plot[i-1][ix] #{plot[i-1][ix]}"
+        if plot[i-1][ix] == " v "
+          lf = true
+        else
+          rf = true
+        end  
+      end
+    end
+    if ix != e
+      if lf
+        plot[i][ix] = "<--"
+      end
+      if rf
+        if plot[i-1][ix] == " v "
+          plot[i][ix] = " | "
+          plot[i+1][ix] = " v "
+          plot[i+2][ix] = "-C>"
+          plot[i+3][ix] = " | "
+          plot[i+4][ix] = " v "
+        else
+          plot[i+2][ix] = "-->"
+        end
+      end
+    end
+  }
+  puts "this"
+  p plot[i-1]
+  i+=5
+}
+
+puts "PLOT"
+plot.each{ |r|
+  p r
+}

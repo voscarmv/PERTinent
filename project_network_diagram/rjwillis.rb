@@ -1,7 +1,7 @@
 # Algorithm from https://doi.org/10.1016/0305-0548(85)90041-3
 # An algorithm for constructing project network diagrams on an ordinary line printer
 # R.J.Willis†
-nodes = [1, 2, 3, 4, 5]
+# nodes = [1, 2, 3, 4, 5]
 # pnd = [
 #   [[1, 2], 1],
 #   [[1, 3], 1],
@@ -12,13 +12,20 @@ nodes = [1, 2, 3, 4, 5]
 #   [[3, 5], 4]  
 # ]
 
+nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 pnd = [
   [[1, 2], 1],
   [[1, 3], 1],
   [[1, 4], 1],
   [[2, 5], 2],
   [[3, 5], 3],
-  [[4, 5], 4]
+  [[4, 5], 4],
+  [[5, 6], 5],
+  [[5, 7], 5],
+  [[5, 8], 5],
+  [[6, 9], 6],
+  [[7, 9], 7],
+  [[8, 9], 8],
 ]
 
 table = Array.new(nodes.length){Array.new(1,0)}
@@ -39,7 +46,7 @@ pnd.each{ |activity|
   if ix
     nest1e = pnd[ix][1]
   else
-    nest1e = pnd.last[1]+1
+    nest1e = nodes.length
   end
 
   puts "#{startnode},#{endnode}"
@@ -96,7 +103,8 @@ plot = Array.new()
 
 plot.push(Array.new(table[0].length,"   "))
 i = 1
-table.each{ |r|
+cols = table.transpose
+table.each_with_index{ |r, k|
   5.times{
     plot.push(Array.new(r.length,"   "))
   }
@@ -109,40 +117,61 @@ table.each{ |r|
   r.reverse.each_with_index{ |v, j|
     ix = r.length - 1 - j
     if v != 0
-      plot[i+3][ix] = " v "
-      plot[i+4][ix] = " v "
+      colcpy = cols[ix].dup
+      colcpy.shift(k+1)
+      puts "val #{v}"
+      puts "col #{colcpy}"
+      puts "col shift #{colcpy}"
+      puts "col shift index #{colcpy.index {|c| c != 0}}"
+      below = colcpy.index {|c| c != 0}
+      if below
+        plot[i+3][ix] = " v "
+        plot[i+4][ix] = " v "
+      end
       if ix != e
         # puts "plot[i-1][ix] #{plot[i-1][ix]}"
         if plot[i-1][ix] == " v "
           lf = true
-        else
+        end
+        if below
           rf = true
+          plot[i+3][ix] = " v "
+          plot[i+4][ix] = " v "
         end  
       end
     end
     if ix != e
       if plot[i-1][ix] == " v "
-        plot[i][ix] = " v "
-        plot[i+1][ix] = " v "
-        plot[i+2][ix] = " v "
-        plot[i+3][ix] = " v "
-        plot[i+4][ix] = " v "
-      end
-      if lf
-        plot[i][ix] = "<<<"
-        plot[i+1][ix] = "   "
-        plot[i+2][ix] = "   "
-        plot[i+3][ix] = "   "
-        plot[i+4][ix] = "   "
-      end
-      if rf
-        if plot[i-1][ix] == " v "
+        if !lf && !rf
+          plot[i][ix] = " v "
+          plot[i+1][ix] = " v "
+          plot[i+2][ix] = " v "
+          plot[i+3][ix] = " v "
+          plot[i+4][ix] = " v "
+        end
+        if !lf && rf
           plot[i][ix] = " v "
           plot[i+1][ix] = " v "
           plot[i+2][ix] = ">v>"
           plot[i+3][ix] = " v "
           plot[i+4][ix] = " v "
-        else
+        end
+        if lf && !rf
+          plot[i][ix] = "<<<"
+        end
+        if lf && rf
+          plot[i][ix] = "<<<"
+          plot[i+2][ix] = ">>>"
+        end
+      else
+        if !lf && rf
+          plot[i+2][ix] = ">>>"
+        end
+        if lf && !rf
+          plot[i][ix] = "<<<"
+        end
+        if lf && rf
+          plot[i][ix] = "<<<"
           plot[i+2][ix] = ">>>"
         end
       end

@@ -114,6 +114,8 @@ table.each_with_index{ |r, k|
   plot[i+2][e] = "---"
   lf = false
   rf = false
+  l1 = true
+  r1 = true
   r.reverse.each_with_index{ |v, j|
     ix = r.length - 1 - j
     if v != 0
@@ -157,22 +159,57 @@ table.each_with_index{ |r, k|
           plot[i+4][ix] = " v "
         end
         if lf && !rf
-          plot[i][ix] = "<<<"
+          if l1
+            plot[i][ix] = "<<"
+            l1 = false
+          else
+            plot[i][ix] = "<<<"
+          end
         end
         if lf && rf
-          plot[i][ix] = "<<<"
-          plot[i+2][ix] = ">>>"
+          if l1
+            plot[i][ix] = "<<"
+            l1 = false
+          else
+            plot[i][ix] = "<<<"
+          end
+          if r1
+            plot[i+2][ix] = ">>"
+            r1 = false
+          else
+            plot[i+2][ix] = ">>>"
+          end
         end
       else
         if !lf && rf
-          plot[i+2][ix] = ">>>"
+          if r1
+            plot[i+2][ix] = ">>"
+            r1 = false
+          else
+            plot[i+2][ix] = ">>>"
+          end
         end
         if lf && !rf
-          plot[i][ix] = "<<<"
+          if l1
+            plot[i][ix] = "<<"
+            l1 = false
+          else
+            plot[i][ix] = "<<<"
+          end
         end
         if lf && rf
-          plot[i][ix] = "<<<"
-          plot[i+2][ix] = ">>>"
+          if l1
+            plot[i][ix] = "<<"
+            l1 = false
+          else
+            plot[i][ix] = "<<<"
+          end
+          if r1
+            plot[i+2][ix] = ">>"
+            r1 = false
+          else
+            plot[i+2][ix] = ">>>"
+          end
         end
       end
     end

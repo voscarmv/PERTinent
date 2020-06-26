@@ -14,7 +14,7 @@ edges = [
   [3, 5]  
 ]
 
-edges.shuffle
+edges.shuffle!
 
 # Khan's algorithm for topo-sort
 
@@ -26,7 +26,7 @@ until nextnodes.empty?
   nextnodes.delete(v)
 
   neighboredges = edges.select{|e| e[0] == v }
-  p neighboredges
+  neighboredges.sort_by!{|x, y| y}
   pnd += neighboredges
 
   neighboredges.each{ |e|
@@ -40,4 +40,12 @@ until nextnodes.empty?
   }
 end
 
-p pnd
+prev = pnd[0][0]
+nest1 = 1
+pnd.map { |e|
+  if e[0] != prev
+    nest1 += 1
+    prev = e[0]
+  end
+  e = [e, nest1]
+}

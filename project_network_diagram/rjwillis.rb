@@ -204,7 +204,7 @@ table.each_with_index{ |r, k|
         if !lf && rf
           plot[i][ix] = " v "
           plot[i+1][ix] = " v "
-          plot[i+2][ix] = ">v>"
+          plot[i+2][ix] = ">+>"
           plot[i+3][ix] = " v "
           plot[i+4][ix] = " v "
         end
@@ -227,7 +227,11 @@ table.each_with_index{ |r, k|
             plot[i+2][ix] = ">> "
             r1 = false
           else
-            plot[i+2][ix] = ">>>"
+            if below
+              plot[i+2][ix] = ">v>"
+            else
+              plot[i+2][ix] = ">>>"
+            end
           end
         end
       else
@@ -236,7 +240,11 @@ table.each_with_index{ |r, k|
             plot[i+2][ix] = ">> "
             r1 = false
           else
-            plot[i+2][ix] = ">>>"
+            if below
+              plot[i+2][ix] = ">v>"
+            else
+              plot[i+2][ix] = ">>>"
+            end
           end
         end
         if lf && !rf
@@ -258,7 +266,11 @@ table.each_with_index{ |r, k|
             plot[i+2][ix] = ">> "
             r1 = false
           else
-            plot[i+2][ix] = ">>>"
+            if below
+              plot[i+2][ix] = ">v>"
+            else
+              plot[i+2][ix] = ">>>"
+            end
           end
         end
       end

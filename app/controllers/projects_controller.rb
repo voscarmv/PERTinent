@@ -164,7 +164,7 @@ class ProjectsController < ApplicationController
         }
         e = r.index { |c| c != 0 }
         plot[i][e] = "---"
-        plot[i+1][e] = " #{r[e]} "
+        plot[i+1][e] = r[e]
         plot[i+2][e] = "---"
         lf = false
         rf = false
@@ -305,6 +305,25 @@ class ProjectsController < ApplicationController
         puts r.join
       }
 
+      @grid = plot
+      @root_n = Node.find_by(id: endnode)
+
+      ###
+      #
+      # Optimize later: load all nodes before rendering on page.
+
+      # table.each{|r|
+      #   r.map!{|c|
+      #     if c.class == Integer
+      #       Node.find_by(id: c)
+      #     end
+      #   }
+      # }
+
+      # puts "PLOTe"
+      # plot.each{ |r|
+      #   puts r.join
+      # }
       # levels.each{ |lv| 
       #   @rows.push(Node.where("id IN (#{lv.join(',')})").includes(:from_nodes))
       # }

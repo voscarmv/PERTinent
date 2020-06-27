@@ -1,6 +1,6 @@
 <h1>Work breakdown structure</h1>
 
-<% root_node = @rows.shift[0] %>
+<% root_node = @root_n %>
 <div class="d-flex flex-wrap align-content-between justify-content-around m-5">
   <div class="rounded bg-primary opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= root_node.id %>">
     <h2><%= root_node.name %></h2>
@@ -17,9 +17,14 @@
   </div>
 </div>
 
-<% @rows.each { |r| %>
-  <div class="d-flex flex-wrap align-content-between justify-content-around m-5">
-  <% r.each { |node| %>
+<div style="display: grid; grid-template-columns: repeat(<%= @grid[0].length %>, auto); grid-template-rows: repeat(<%= @grid.length %>, auto); ">
+<% @grid.each{ |r| %>
+  <% r.each{ |c|%>
+  <div>
+  <% if c == -1 %>
+    START
+  <% elsif c.class == Integer %>
+    <% node = Node.find_by(id: c) %>
     <div class="rounded <%= node.children_incomplete ? "bg-secondary" : ( node.complete ? "bg-success" : "bg-warning" ) %> opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= node.id %>">
       <h2><%= node.name %></h2>
       <%= form_with(model: node) do |form| %>
@@ -66,9 +71,13 @@
       </div>
       </p>
     </div>
-  <% } %>
+  <% else %>
+    <%= c %>
+  <% end %>
   </div>
-<% } %>
+  <%}%>
+<%}%>
+</div>
 
 <svg xmlns="http://www.w3.org/2020/svg" id="svg_bg" style="width:100%; position: absolute; top: 0; z-index: -1;">
   <defs>
@@ -86,16 +95,13 @@
     </marker>
   </defs>
   <g fill="none" stroke="black" stroke-width="4" marker-end="url(#arrowheadblack)">
-    
-    <% (0..@edges.length).each { |i| %>
-    <path id="e_<%= i %>"/>
-    <% } %>
+
   </g>
 </svg>
 
 <script>
   const edges = <%= @edges.to_s %>;
-  const nodes = <%= @vertices.to_s %>
+  const nodes = <%= @nodes.to_s %>
 </script>
 
 <%= javascript_pack_tag 'arrows' %>

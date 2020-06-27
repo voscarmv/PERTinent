@@ -170,12 +170,15 @@ table.each_with_index{ |r, k|
     ix = r.length - 1 - j
     if v != 0
       colcpy = cols[ix].dup
+      colcpy2 = cols[ix].dup
       colcpy.shift(k+1)
+      colcpy.reverse.shift(colcpy2.length-(k))
       puts "val #{v}"
       puts "col #{colcpy}"
       puts "col shift #{colcpy}"
       puts "col shift index #{colcpy.index {|c| c != 0}}"
       below = colcpy.index {|c| c != 0}
+      above = colcpy2.index {|c| c != 0}
       if below
         plot[i+3][ix] = " v "
         plot[i+4][ix] = " v "
@@ -209,11 +212,19 @@ table.each_with_index{ |r, k|
           plot[i+4][ix] = " v "
         end
         if lf && !rf
-          if l1
-            plot[i][ix] = "<< "
-            l1 = false
+          if v != 0
+            if l1
+              plot[i][ix] = "<< "
+              l1 = false
+            else
+              plot[i][ix] = "<<<"
+            end  
           else
-            plot[i][ix] = "<<<"
+            plot[i][ix] = " v "
+            plot[i+1][ix] = " v "
+            plot[i+2][ix] = "<+<"
+            plot[i+3][ix] = " v "
+            plot[i+4][ix] = " v "
           end
         end
         if lf && rf

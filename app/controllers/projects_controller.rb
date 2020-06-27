@@ -14,8 +14,8 @@ class ProjectsController < ApplicationController
       prjid = @project.id
 
       edges = Link.where(project_id: prjid).pluck("from_id, to_id")
-      nodes = Node.where(project_id: prjid).pluck("id")
-      startnode = 0
+      nodes = Node.where(project_id: prjid).pluck("id").push(-1)
+      startnode = -1
       endnode = Node.where(project_id: prjid).order(:created_at).limit(1).first.id
 
       # Add an artificial start node
@@ -193,7 +193,14 @@ class ProjectsController < ApplicationController
                 rf = true
                 plot[i+3][ix] = " v "
                 plot[i+4][ix] = " v "
-              end  
+              end 
+            else
+              if lf
+                lf = false
+              end
+              if rf
+                rf = false
+              end
             end
           end
           if ix != e
@@ -213,11 +220,19 @@ class ProjectsController < ApplicationController
                 plot[i+4][ix] = " v "
               end
               if lf && !rf
-                if l1
-                  plot[i][ix] = "<< "
-                  l1 = false
+                if v != 0
+                  if l1
+                    plot[i][ix] = "<< "
+                    l1 = false
+                  else
+                    plot[i][ix] = "<<<"
+                  end  
                 else
-                  plot[i][ix] = "<<<"
+                  plot[i][ix] = "<+<"
+                  plot[i+1][ix] = " v "
+                  plot[i+2][ix] = " v "
+                  plot[i+3][ix] = " v "
+                  plot[i+4][ix] = " v "
                 end
               end
               if lf && rf

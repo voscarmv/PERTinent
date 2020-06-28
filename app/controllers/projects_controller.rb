@@ -225,7 +225,7 @@ class ProjectsController < ApplicationController
                     plot[i][ix] = "<< "
                     l1 = false
                   else
-                    plot[i][ix] = "<<<"
+                    plot[i][ix] = "<v<"
                   end  
                 else
                   plot[i][ix] = "<+<"
@@ -240,7 +240,7 @@ class ProjectsController < ApplicationController
                   plot[i][ix] = "<< "
                   l1 = false
                 else
-                  plot[i][ix] = "<<<"
+                  plot[i][ix] = "<v<"
                 end
                 if r1
                   plot[i+2][ix] = ">> "

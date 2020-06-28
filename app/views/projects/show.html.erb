@@ -1,5 +1,16 @@
 <h1>Work breakdown structure</h1>
 
+    <svg class="defs-only" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+      <symbol id="rainbow">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" stroke-width="3">
+          <path vector-effect="non-scaling-stroke" d="M 0 50 L 90 50" stroke="black"/>
+        </svg>
+        <svg  preserveAspectRatio="xMaxYMax meet" viewBox="-10 -10 20 20" y="40%" height="20" >
+          <path vector-effect="non-scaling-stroke" d="M 0 0 L 10 5 L 0 10 z" />
+        </svg>
+      </symbol>
+    </svg>
+
 <% root_node = @root_n %>
 <div class="d-flex flex-wrap align-content-between justify-content-around m-5">
   <div class="rounded bg-primary opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= root_node.id %>">
@@ -20,7 +31,7 @@
 <div style="display: grid; grid-template-columns: repeat(<%= @grid[0].length %>, auto); grid-template-rows: repeat(<%= @grid.length %>, auto); ">
 <% @grid.each{ |r| %>
   <% r.each{ |c|%>
-  <div>
+  <div class="d-flex align-items-center justify-content-center flex-column">
   <% if c == -1 %>
     START
   <% elsif c.class == Integer %>
@@ -103,7 +114,32 @@
 
 
   <% else %>
-    <%= c %>
+    <% if c == ">>>"%>
+    <svg width="100%" height="100%">
+      <use xlink:href="#rainbow"/>
+    </svg>
+    <% elsif c == ">> " %>
+      <svg xmlns="http://www.w3.org/2020/svg" viewBox="0 0 100 100" id="svg_bg" style="width:100%; height: 100%;">
+        <defs>
+          <marker id="arrowheadblack" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto" stroke="black" fill="black">
+            <path vector-effect="non-scaling-stroke" d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
+        <g fill="none" stroke="black" stroke-width="4" marker-end="url(#arrowheadblack)">
+          <path vector-effect="non-scaling-stroke" id="e" d="M 0 50 Q 50 50 50 100" stroke="black"/>
+        </g>
+      </svg>
+    <% elsif c == ">v>" %>
+      <%= c %>
+    <% elsif c == "<<<" %>
+      <%= c %>
+    <% elsif c == "<< " %>
+      <%= c %>
+    <% elsif c == "<v<" %>
+      <%= c %>
+    <% elsif c == " v " %>
+      <%= c %>
+    <% end %>
   <% end %>
   </div>
   <%}%>

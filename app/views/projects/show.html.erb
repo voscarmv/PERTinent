@@ -25,52 +25,83 @@
     START
   <% elsif c.class == Integer %>
     <% node = Node.find_by(id: c) %>
-    <div class="rounded <%= node.children_incomplete ? "bg-secondary" : ( node.complete ? "bg-success" : "bg-warning" ) %> opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= node.id %>">
-      <h2><%= node.name %></h2>
-      <%= form_with(model: node) do |form| %>
-        <div class="field">
-        <%= form.label :complete %>
-        <%= form.check_box :complete, onchange: 'this.form.submit();' %>
-        </div>
-      <% end %>
-      <% if node.description then %>
-      <p><%= node.description %></p>
-      <% end %>
+    <p><%= node.name %></p>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter<%= node.id %>">
+    go
+    </button>
 
-      <p>
-      <%= link_to 'Start Pomodoro', new_pomodoro_path(pomodoro: {node_id: node.id}), class: "btn btn-primary btn-sm text-white m-1"%>
-      <%= link_to 'View pomodoros', pomodoros_path(pomodoro: {node_id: node.id}), class: "btn btn-primary btn-sm text-white m-1" %>
-      </p>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter<%= node.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModal<%= node.id %>CenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
 
-      <p>
-      <%= link_to 'Add subtask', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "border-white btn btn-warning btn-sm text-black m-1"%>
-      <%= link_to 'Edit task', edit_node_path(node), class: "btn btn-warning btn-sm text-black m-1 border-white"%>
-      <%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "border-white btn btn-warning btn-sm text-black m-1" %>
-      </p>
 
-      </p>
-      <% unless node.from_nodes.exists? %>
-      <%= link_to 'Delete this node', node, method: :delete, class: "btn btn-danger btn-sm text-white m-1" %>
-      <% end %>
-      <div class="dropdown d-inline-block m-1">
-        <button class="btn btn-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Delete links
-        </button>
-        <div class="dropdown-menu">
-          <% if node.to_links.count > 1 %>
-            <% node.to_links.each { |to_link| %>
-              <%= link_to "Delete link to #{to_link.to_node.name}", to_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete mb-2", id: "l_#{to_link.from_id}_#{to_link.to_id}" %>
-            <% } %>
-          <% end %>
-          <% node.from_links.each { |from_link| %>
-            <% if from_link.from_node.to_links.count > 1 %>
-              <%= link_to "Delete link from #{from_link.from_node.name}", from_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete mb-2", id: "l_#{from_link.from_id}_#{from_link.to_id}" %>
+          <div class="rounded <%= node.children_incomplete ? "bg-secondary" : ( node.complete ? "bg-success" : "bg-warning" ) %> opacity-90 p-3 mt-5 mb-5 ml-1 mr-1 node" id="n_<%= node.id %>">
+            <h2><%= node.name %></h2>
+            <%= form_with(model: node) do |form| %>
+              <div class="field">
+              <%= form.label :complete %>
+              <%= form.check_box :complete, onchange: 'this.form.submit();' %>
+              </div>
             <% end %>
-          <% } %>
+            <% if node.description then %>
+            <p><%= node.description %></p>
+            <% end %>
+
+            <p>
+            <%= link_to 'Start Pomodoro', new_pomodoro_path(pomodoro: {node_id: node.id}), class: "btn btn-primary btn-sm text-white m-1"%>
+            <%= link_to 'View pomodoros', pomodoros_path(pomodoro: {node_id: node.id}), class: "btn btn-primary btn-sm text-white m-1" %>
+            </p>
+
+            <p>
+            <%= link_to 'Add subtask', new_node_path(node: {project_id: @project.id, to_links_attributes: [{to_id: node.id, project_id: @project.id}]}), class: "border-white btn btn-warning btn-sm text-black m-1"%>
+            <%= link_to 'Edit task', edit_node_path(node), class: "btn btn-warning btn-sm text-black m-1 border-white"%>
+            <%= link_to 'Connect to task', new_link_path(link: {from_id: node.id, project_id: @project.id}, anchor: "n_#{node.id}"), class: "border-white btn btn-warning btn-sm text-black m-1" %>
+            </p>
+
+            </p>
+            <% unless node.from_nodes.exists? %>
+            <%= link_to 'Delete this node', node, method: :delete, class: "btn btn-danger btn-sm text-white m-1" %>
+            <% end %>
+            <div class="dropdown d-inline-block m-1">
+              <button class="btn btn-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Delete links
+              </button>
+              <div class="dropdown-menu">
+                <% if node.to_links.count > 1 %>
+                  <% node.to_links.each { |to_link| %>
+                    <%= link_to "Delete link to #{to_link.to_node.name}", to_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete mb-2", id: "l_#{to_link.from_id}_#{to_link.to_id}" %>
+                  <% } %>
+                <% end %>
+                <% node.from_links.each { |from_link| %>
+                  <% if from_link.from_node.to_links.count > 1 %>
+                    <%= link_to "Delete link from #{from_link.from_node.name}", from_link, method: :delete, class: "btn btn-danger btn-sm text-white link_delete mb-2", id: "l_#{from_link.from_id}_#{from_link.to_id}" %>
+                  <% end %>
+                <% } %>
+              </div>
+            </div>
+            </p>
+          </div>
+
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
         </div>
       </div>
-      </p>
     </div>
+
+
   <% else %>
     <%= c %>
   <% end %>

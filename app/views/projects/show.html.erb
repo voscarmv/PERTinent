@@ -7,7 +7,18 @@
           <path vector-effect="non-scaling-stroke" d="M 0 10 Q 10 10 10 20" stroke="black" fill="none"/>
         </svg>
       </symbol>
+      <symbol id="up-left">
+        <svg viewBox="0 0 20 20" width="100%" height="100%" preserveAspectRatio="none" stroke-width="3">
+          <path vector-effect="non-scaling-stroke" d="M 0 10 L 20 10" stroke="black"/>
+          <path vector-effect="non-scaling-stroke" d="M 10 0 Q 10 10 0 10" stroke="black" fill="none"/>
+        </svg>
+      </symbol>
       <symbol id="right">
+        <svg viewBox="0 0 20 20" width="100%" height="100%" preserveAspectRatio="none" stroke-width="3">
+          <path vector-effect="non-scaling-stroke" d="M 0 10 L 20 10" stroke="black"/>
+        </svg>
+      </symbol>
+      <symbol id="left">
         <svg viewBox="0 0 20 20" width="100%" height="100%" preserveAspectRatio="none" stroke-width="3">
           <path vector-effect="non-scaling-stroke" d="M 0 10 L 20 10" stroke="black"/>
         </svg>
@@ -17,10 +28,25 @@
           <path vector-effect="non-scaling-stroke" d="M 0 10 Q 10 10 10 20" stroke="black" fill="none"/>
         </svg>
       </symbol>
+      <symbol id="up-elbow">
+        <svg viewBox="0 0 20 20" width="100%" height="100%" preserveAspectRatio="none" stroke-width="3">
+          <path vector-effect="non-scaling-stroke" d="M 10 0 Q 10 10 0 10" stroke="black" fill="none"/>
+        </svg>
+      </symbol>
       <symbol id="down">
         <svg viewBox="0 0 20 20" width="100%" height="100%" preserveAspectRatio="none" stroke-width="3">
           <path vector-effect="non-scaling-stroke" d="M 10 0 L 10 20" stroke="black" fill="none"/>
         </svg>
+      </symbol>
+      <symbol id="right-cross">
+        <svg viewBox="0 0 20 20" width="100%" height="100%" preserveAspectRatio="none" stroke-width="3">
+          <path vector-effect="non-scaling-stroke" d="M 0 10 L 20 10" stroke="black" fill="none"/>
+          <path vector-effect="non-scaling-stroke" d="M 10 0 L 10 6 Q 10 8, 12 8 T 14 10 Q 14 12, 12 12 T 10 14 M 10 14 L 10 20 " stroke="black" fill="none"/>        </svg>
+      </symbol>
+      <symbol id="left-cross">
+        <svg viewBox="0 0 20 20" width="100%" height="100%" preserveAspectRatio="none" stroke-width="3">
+          <path vector-effect="non-scaling-stroke" d="M 0 10 L 20 10" stroke="black" fill="none"/>
+          <path vector-effect="non-scaling-stroke" d="M 10 0 L 10 6 Q 10 8, 12 8 T 14 10 Q 14 12, 12 12 T 10 14 M 10 14 L 10 20 " stroke="black" fill="none"/>        </svg>
       </symbol>
     </svg>
 
@@ -41,7 +67,7 @@
   </div>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(<%= @grid[0].length %>, auto); grid-template-rows: repeat(<%= @grid.length %>, auto); ">
+<div style="display: grid; width: auto; grid-template-columns: repeat(<%= @grid[0].length %>, auto); grid-template-rows: repeat(<%= @grid.length %>, auto); ">
 <% @grid.each{ |r| %>
   <% r.each{ |c|%>
   <div class="d-flex align-items-center justify-content-center flex-column">
@@ -147,19 +173,27 @@
       <use xlink:href="#down-elbow"/>
 
     <% elsif c == ">+>" %>
-      <%= c %>
-    <% elsif c == "<<<" %>
-      <%= c %>
-    <% elsif c == "<< " %>
-      <%= c %>
-    <% elsif c == "<+<" %>
-      <%= c %>
-    <% elsif c == "<v<" %>
-      <%= c %>
-    <% elsif c == " v " %>
 
+      <use xlink:href="#right-cross"/>
+
+    <% elsif c == "<<<" %>
+
+      <use xlink:href="#left"/>
+
+    <% elsif c == "<< " %>
+
+      <use xlink:href="#up-elbow"/>
+
+    <% elsif c == "<+<" %>
+
+      <use xlink:href="#left-cross"/>
+
+    <% elsif c == "<v<" %>
+
+      <use xlink:href="#up-left"/>
+
+    <% elsif c == " v " %>
       <use xlink:href="#down"/>
- 
     <% end %>
       </svg>
       </div>

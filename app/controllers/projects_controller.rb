@@ -19,11 +19,20 @@ class ProjectsController < ApplicationController
       endnode = Node.where(project_id: prjid).order(:created_at).limit(1).first.id
 
       # Add an artificial start node
-      startpoints = Node.where(project: Project.second).includes(:from_links).references(:from_links).where(links: {id: nil}).pluck("id")
+      startpoints = Node.where(project: prjid).includes(:from_links).references(:from_links).where(links: {id: nil}).pluck("id")
       edges += startpoints.map{|n| [startnode, n]}
 
       pnd = []
       nextnodes = [startnode]
+
+      # p edges
+      # p nodes
+      # p startnode
+      # p endnode
+      # p nextnodes
+      # p startpoints
+
+      # return
       
       until nextnodes.empty?
         v = nextnodes[0]
@@ -305,7 +314,7 @@ class ProjectsController < ApplicationController
         puts r.join
       }
 
-      @grid = plot
+      @grid = plot.transpose
       @root_n = Node.find_by(id: endnode)
 
       ###

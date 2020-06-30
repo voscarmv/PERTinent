@@ -77,6 +77,9 @@
 //   top: 150px;
 // }
 
+html {position:absolute;min-width:200%;}
+
+body {display:inline-block;min-width:100%;}
 
 .bg-1{
   background-color: #00f;

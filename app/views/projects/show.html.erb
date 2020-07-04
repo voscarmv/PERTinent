@@ -71,7 +71,7 @@
 <div style="display: grid; width: auto; grid-template-columns: repeat(<%= @grid[0].length %>, minmax(40px, min-content)); grid-auto-rows: minmax(40px, auto);">
 <% @grid.each{ |r| %>
   <% r.each{ |c|%>
-  <div class="border">
+  <div class="">
   <% if c == -1 %>
     START
   <% elsif c.class == Integer %>

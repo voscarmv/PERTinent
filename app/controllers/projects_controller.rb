@@ -21,6 +21,7 @@ class ProjectsController < ApplicationController
       # Add an artificial start node
       startpoints = Node.where(project: prjid).includes(:from_links).references(:from_links).where(links: {id: nil}).pluck("id")
       edges += startpoints.map{|n| [startnode, n]}
+      edges2 = edges.dup
 
       pnd = []
       nextnodes = [startnode]
@@ -309,10 +310,96 @@ class ProjectsController < ApplicationController
         i+=5
       }
       
-      puts "PLOT"
-      plot.each{ |r|
-        puts r.join
-      }
+      # puts "PLOT"
+      # plot.each{ |r|
+      #   puts r.join
+      # }
+
+      p edges2
+      p nodes
+      p endnode
+
+      i = 7
+      n1 = nil
+      n2 = nil
+      pl = plot.length
+
+      while i+5 < plot.length do
+        puts "Testing nodes"
+        j = plot[i].index{|x| x.class == Integer}
+        above = plot[i-2][j]
+        below = plot[i+2][j]
+        above_corner = plot[i-1][j+1]
+        below_corner = plot[i+1][j+1]
+      
+        p above
+        p below
+        p above_corner
+        p below_corner
+      
+        if above == " v " && below == " v " && above_corner[0] != "<" && below_corner[0] != ">"
+          p "Found first node"
+          n1 = [i,j]
+        end
+      
+        if n1
+          s = i + 5
+          t = plot[s].index{|x| x.class == Integer}
+          above = plot[s-2][t]
+          below = plot[s+2][t]
+          above_corner = plot[s-1][t+1]
+          below_corner = plot[s+1][t+1]
+        
+          if above == " v " && below == " v " && above_corner[0] != "<" && below_corner[0] != ">"
+            p "Found second node"
+            n2 = [s,t]
+          end
+      
+          if n1 && n2
+            p "Check if nodes are compatible for sliding"
+            r1 = n1[0]
+            c1 = n1[1]
+      
+            r2 = n2[0]
+            c2 = n2[1]
+      
+            compare_row1_1 = plot[r1-1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+            compare_row1_2 = plot[r1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+            compare_row1_3 = plot[r1+1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      
+            compare_row2_1 = plot[r2-1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+            compare_row2_2 = plot[r2].map{|x| x == "---" || x.class == Integer ? " v " : x}
+            compare_row2_3 = plot[r2+1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      
+            if compare_row1_1 == compare_row2_1 && compare_row1_2 == compare_row2_2 && compare_row1_3 == compare_row2_3
+      
+              p "Before"
+              p plot[r1]
+              p plot[r2]
+        
+              plot[r1][c2], plot[r2][c2] = plot[r2][c2], plot[r1][c2]
+              plot[r1+1][c2], plot[r2+1][c2] = plot[r2+1][c2], plot[r1+1][c2]
+              plot[r1-1][c2], plot[r2-1][c2] = plot[r2-1][c2], plot[r1-1][c2]
+        
+              p "After"
+              p plot[r1]
+              p plot[r2]
+      
+              plot.slice!(r1+2, 5)
+
+              next
+              # sliceis.each{|r|
+              #   p r.join
+              # }
+              # Eliminate unnecesary column
+            end
+      
+          end
+      
+        end
+      
+        i += 5
+      end
 
       @grid = plot.transpose
       @root_n = Node.find_by(id: endnode)

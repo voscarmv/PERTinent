@@ -2,10 +2,12 @@
 # An algorithm for constructing project network diagrams on an ordinary line printer
 # R.J.Willis†
 
-edges = [[2, 1], [3, 1], [4, 1], [5, 2], [6, 2], [7, 2], [8, 3], [9, 3], [10, 3], [3, 4], [2, 4], [11, 3], [12, 3], [13, 12], [14, 10], [15, 9], [16, 14], [17, 3], [24, 1], [40, 1], [41, 40], [49, 1], [-1, 28], [-1, 32], [-1, 33], [-1, 34], [-1, 35], [-1, 38], [-1, 39], [-1, 45], [-1, 51], [-1, 52], [-1, 54], [-1, 55], [-1, 56], [-1, 57], [-1, 59], [-1, 60], [-1, 62], [-1, 63], [-1, 64], [-1, 65], [-1, 66]]
-nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 24, 40, 41, 49, -1]
+
+edges = [[26, 25], [27, 25], [27, 25], [29, 26], [28, 29], [30, 26], [28, 30], [27, 25], [27, 25], [31, 27], [28, 31], [32, 27], [33, 27], [34, 27], [35, 25], [36, 25], [37, 25], [38, 36], [39, 36], [26, 36], [27, 36], [35, 36], [36, 37], [44, 25], [45, 44], [50, 27], [51, 50], [52, 50], [53, 44], [54, 53], [55, 53], [56, 53], [57, 53], [58, 44], [59, 58], [60, 58], [61, 44], [62, 61], [63, 61], [64, 61], [65, 25], [66, 44], [-1, 28], [-1, 32], [-1, 33], [-1, 34], [-1, 35], [-1, 38], [-1, 39], [-1, 45], [-1, 51], [-1, 52], [-1, 54], [-1, 55], [-1, 56], [-1, 57], [-1, 59], [-1, 60], [-1, 62], [-1, 63], [-1, 64], [-1, 65], [-1, 66]]
+nodes = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 44, 45, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, -1]
 startnode = -1
-endnode = 1
+endnode = 25
+
 # startpoints = [28, 32, 33, 34, 35, 38, 39, 45, 51, 52, 54, 55, 56, 57, 59, 60, 62, 63, 64, 65, 66]
 
 # edges += startpoints.map{|n| [startnode, n]}
@@ -62,36 +64,8 @@ pnd.map! { |e|
 }
 
 p pnd
-
-1
-# pnd = [
-#   [[1, 2], 1],
-#   [[1, 3], 1],
-#   [[1, 4], 1],
-#   [[2, 3], 2],
-#   [[2, 5], 2],
-#   [[4, 5], 3],
-#   [[3, 5], 4]  
-# ]
-
-# nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-# pnd = [
-#   [[1, 2], 1],
-#   [[1, 3], 1],
-#   [[1, 4], 1],
-#   [[2, 5], 2],
-#   [[3, 5], 3],
-#   [[4, 5], 4],
-#   [[5, 6], 5],
-#   [[5, 7], 5],
-#   [[5, 8], 5],
-#   [[6, 9], 6],
-#   [[7, 9], 7],
-#   [[8, 9], 8],
-# ]
-
 table = Array.new(nodes.length){Array.new(1,0)}
-
+      
 pnd.each{ |activity|
 
   puts "TABLE START"
@@ -172,7 +146,7 @@ table.each_with_index{ |r, k|
   }
   e = r.index { |c| c != 0 }
   plot[i][e] = "---"
-  plot[i+1][e] = " #{r[e]} "
+  plot[i+1][e] = r[e]
   plot[i+2][e] = "---"
   lf = false
   rf = false
@@ -182,15 +156,12 @@ table.each_with_index{ |r, k|
     ix = r.length - 1 - j
     if v != 0
       colcpy = cols[ix].dup
-      colcpy2 = cols[ix].dup
       colcpy.shift(k+1)
-      colcpy.reverse.shift(colcpy2.length-(k))
       puts "val #{v}"
       puts "col #{colcpy}"
       puts "col shift #{colcpy}"
       puts "col shift index #{colcpy.index {|c| c != 0}}"
       below = colcpy.index {|c| c != 0}
-      above = colcpy2.index {|c| c != 0}
       if below
         plot[i+3][ix] = " v "
         plot[i+4][ix] = " v "
@@ -204,7 +175,14 @@ table.each_with_index{ |r, k|
           rf = true
           plot[i+3][ix] = " v "
           plot[i+4][ix] = " v "
-        end  
+        end 
+      else
+        if lf
+          lf = false
+        end
+        if rf
+          rf = false
+        end
       end
     end
     if ix != e
@@ -229,12 +207,12 @@ table.each_with_index{ |r, k|
               plot[i][ix] = "<< "
               l1 = false
             else
-              plot[i][ix] = "<<<"
+              plot[i][ix] = "<v<"
             end  
           else
-            plot[i][ix] = " v "
+            plot[i][ix] = "<+<"
             plot[i+1][ix] = " v "
-            plot[i+2][ix] = "<+<"
+            plot[i+2][ix] = " v "
             plot[i+3][ix] = " v "
             plot[i+4][ix] = " v "
           end
@@ -244,7 +222,7 @@ table.each_with_index{ |r, k|
             plot[i][ix] = "<< "
             l1 = false
           else
-            plot[i][ix] = "<<<"
+            plot[i][ix] = "<v<"
           end
           if r1
             plot[i+2][ix] = ">> "
@@ -309,5 +287,87 @@ plot.each{ |r|
   puts r.join
 }
 
-p pnd
-p edges
+i = 7
+n1 = nil
+n2 = nil
+while i < 30 do
+  puts "Testing nodes"
+  j = plot[i].index{|x| x.class == Integer}
+  above = plot[i-2][j]
+  below = plot[i+2][j]
+  above_corner = plot[i-1][j+1]
+  below_corner = plot[i+1][j+1]
+
+  p above
+  p below
+  p above_corner
+  p below_corner
+
+  if above == " v " && below == " v " && above_corner[0] != "<" && below_corner[0] != ">"
+    p "Found first node"
+    n1 = [i,j]
+  end
+
+  if n1
+    s = i + 5
+    t = plot[s].index{|x| x.class == Integer}
+    above = plot[s-2][t]
+    below = plot[s+2][t]
+    above_corner = plot[s-1][t+1]
+    below_corner = plot[s+1][t+1]
+  
+    if above == " v " && below == " v " && above_corner[0] != "<" && below_corner[0] != ">"
+      p "Found second node"
+      n2 = [s,t]
+    end
+
+    if n1 && n2
+      p "Check if nodes are compatible for sliding"
+      r1 = n1[0]
+      c1 = n1[1]
+
+      r2 = n2[0]
+      c2 = n2[1]
+
+      compare_row1_1 = plot[r1-1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      compare_row1_2 = plot[r1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      compare_row1_3 = plot[r1+1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+
+      compare_row2_1 = plot[r2-1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      compare_row2_2 = plot[r2].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      compare_row2_3 = plot[r2+1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+
+      if compare_row1_1 == compare_row2_1 && compare_row1_2 == compare_row2_2 && compare_row1_3 == compare_row2_3
+
+        p "Before"
+        p plot[r1]
+        p plot[r2]
+  
+        plot[r1][c2], plot[r2][c2] = plot[r2][c2], plot[r1][c2]
+        plot[r1+1][c2], plot[r2+1][c2] = plot[r2+1][c2], plot[r1+1][c2]
+        plot[r1-1][c2], plot[r2-1][c2] = plot[r2-1][c2], plot[r1-1][c2]
+  
+        p "After"
+        p plot[r1]
+        p plot[r2]
+
+        plot.slice!(r1+2, 5)
+
+        next
+        # sliceis.each{|r|
+        #   p r.join
+        # }
+        # Eliminate unnecesary column
+      end
+
+    end
+
+  end
+
+  i += 5
+end
+
+puts "COMPRESSED PLOT"
+plot.each{ |r|
+  puts r.join
+}

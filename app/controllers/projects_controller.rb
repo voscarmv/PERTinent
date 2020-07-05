@@ -319,97 +319,184 @@ class ProjectsController < ApplicationController
       p nodes
       p endnode
 
-      i = 7
-      n1 = nil
-      n2 = nil
-      pl = plot.length
+      # i = 7
+      # n1 = nil
+      # n2 = nil
+      # pl = plot.length
 
-      while i+5 < pl do
-        puts "Testing nodes, i = #{i}"
-        j = plot[i].index{|x| x.class == Integer}
-        above = plot[i-2][j]
-        below = plot[i+2][j]
-        above_corner = plot[i-1][j+1]
-        below_corner = plot[i+1][j+1]
+      # while i+5 < pl do
+      #   puts "Testing nodes, i = #{i}"
+      #   j = plot[i].index{|x| x.class == Integer}
+      #   above = plot[i-2][j]
+      #   below = plot[i+2][j]
+      #   above_corner = plot[i-1][j+1]
+      #   below_corner = plot[i+1][j+1]
       
-        p above
-        p below
-        p above_corner
-        p below_corner
+      #   p above
+      #   p below
+      #   p above_corner
+      #   p below_corner
       
-        if above == " v " && below == " v " && above_corner[0] != "<" && below_corner[0] != ">"
-          p "Found first node"
-          n1 = [i,j]
+      #   if above == " v " && below == " v " && above_corner[0] != "<" && below_corner[0] != ">"
+      #     p "Found first node"
+      #     n1 = [i,j]
+      #   end
+      
+      #   if n1
+      #     s = i + 5
+      #     t = plot[s].index{|x| x.class == Integer}
+      #     above = plot[s-2][t]
+      #     below = plot[s+2][t]
+      #     above_corner = plot[s-1][t+1]
+      #     below_corner = plot[s+1][t+1]
+        
+      #     if above == " v " && below == " v " && above_corner[0] != "<" && below_corner[0] != ">"
+      #       p "Found second node"
+      #       n2 = [s,t]
+      #     else
+      #       n2 = nil
+      #     end
+
+      #     puts "n1"
+      #     p n1
+      #     puts "n2"
+      #     p n2
+      
+      #     if n1 && n2
+      #       p "Check if nodes are compatible for sliding"
+      #       r1 = n1[0]
+      #       c1 = n1[1]
+      
+      #       r2 = n2[0]
+      #       c2 = n2[1]
+      
+      #       compare_row1_1 = plot[r1-1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      #       compare_row1_2 = plot[r1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      #       compare_row1_3 = plot[r1+1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      
+      #       compare_row2_1 = plot[r2-1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      #       compare_row2_2 = plot[r2].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      #       compare_row2_3 = plot[r2+1].map{|x| x == "---" || x.class == Integer ? " v " : x}
+      
+      #       if compare_row1_1 == compare_row2_1 && compare_row1_2 == compare_row2_2 && compare_row1_3 == compare_row2_3
+      
+      #         p "Before"
+      #         p plot[r1]
+      #         p plot[r2]
+        
+      #         plot[r1][c2], plot[r2][c2] = plot[r2][c2], plot[r1][c2]
+      #         plot[r1+1][c2], plot[r2+1][c2] = plot[r2+1][c2], plot[r1+1][c2]
+      #         plot[r1-1][c2], plot[r2-1][c2] = plot[r2-1][c2], plot[r1-1][c2]
+        
+      #         p "After"
+      #         p plot[r1]
+      #         p plot[r2]
+      
+      #         plot.slice!(r1+2, 5)
+
+      #         pl = plot.length
+
+      #         # n2 = nil
+      #         next
+      #         # sliceis.each{|r|
+      #         #   p r.join
+      #         # }
+      #         # Eliminate unnecesary column
+      #       end
+      
+      #     end
+      
+      #   end
+      #   pl = plot.length
+      
+      #   i += 5
+      # end
+
+      def collision(r1, r2)
+        if r1.length != r2.length
+          nil
         end
-      
-        if n1
-          s = i + 5
-          t = plot[s].index{|x| x.class == Integer}
-          above = plot[s-2][t]
-          below = plot[s+2][t]
-          above_corner = plot[s-1][t+1]
-          below_corner = plot[s+1][t+1]
-        
-          if above == " v " && below == " v " && above_corner[0] != "<" && below_corner[0] != ">"
-            p "Found second node"
-            n2 = [s,t]
-          else
-            n2 = nil
-          end
-
-          puts "n1"
-          p n1
-          puts "n2"
-          p n2
-      
-          if n1 && n2
-            p "Check if nodes are compatible for sliding"
-            r1 = n1[0]
-            c1 = n1[1]
-      
-            r2 = n2[0]
-            c2 = n2[1]
-      
-            compare_row1_1 = plot[r1-1].map{|x| x == "---" || x.class == Integer ? " v " : x}
-            compare_row1_2 = plot[r1].map{|x| x == "---" || x.class == Integer ? " v " : x}
-            compare_row1_3 = plot[r1+1].map{|x| x == "---" || x.class == Integer ? " v " : x}
-      
-            compare_row2_1 = plot[r2-1].map{|x| x == "---" || x.class == Integer ? " v " : x}
-            compare_row2_2 = plot[r2].map{|x| x == "---" || x.class == Integer ? " v " : x}
-            compare_row2_3 = plot[r2+1].map{|x| x == "---" || x.class == Integer ? " v " : x}
-      
-            if compare_row1_1 == compare_row2_1 && compare_row1_2 == compare_row2_2 && compare_row1_3 == compare_row2_3
-      
-              p "Before"
-              p plot[r1]
-              p plot[r2]
-        
-              plot[r1][c2], plot[r2][c2] = plot[r2][c2], plot[r1][c2]
-              plot[r1+1][c2], plot[r2+1][c2] = plot[r2+1][c2], plot[r1+1][c2]
-              plot[r1-1][c2], plot[r2-1][c2] = plot[r2-1][c2], plot[r1-1][c2]
-        
-              p "After"
-              p plot[r1]
-              p plot[r2]
-      
-              plot.slice!(r1+2, 5)
-
-              pl = plot.length
-
-              # n2 = nil
-              next
-              # sliceis.each{|r|
-              #   p r.join
-              # }
-              # Eliminate unnecesary column
+        r1.zip(r2).each{ |c1, c2| 
+          if c1 == "<<<" || c1 == "<< " || c1 == "<+<" || c1 == "---" || c1 == "<v<"
+            if c2 == ">>>" || c2 == ">> " || c2 == ">+>" || c2 == "---" || c2 == ">v>" || c2 == "<<<" || c2 == "<< " || c2 == "<+<" || c2 == "---" || c2 == "<v<"
+              puts "c1 #{c1} c2 #{c2}"
+              return true
             end
+          end
+        }
+        return false
+      end
       
+      i = 7
+      
+      while i < plot.length 
+        j = i - 1
+        k = j - 3
+        puts "Node #{plot[i].select{|x| x.class == Integer}}"
+        until collision(plot[j], plot[k])
+          k -= 1
+        end
+        puts "Shift to #{k}"
+      
+        node_col = plot[i].index{|x| x.class == Integer}
+      
+        rowstodelete = j - k
+        k += 3
+      
+        if k < i-1
+          puts "DO SHIFT!"
+          # Destination
+      
+          m1 = node_col
+          while plot[i-1][m1] == "<v<" || plot[i-1][m1] == "<< " || plot[i-1][m1] == "---" || plot[i-1][m1] == "<+<" || plot[i-1][m1] == "   " || plot[i-1][m1] == "<<<" 
+            plot[k][m1] = plot[i-1][m1]
+            plot[k+1][m1] = plot[i][m1]
+            m1 += 1
           end
       
-        end
-        pl = plot.length
+          m2 = node_col
+          while plot[i+1][m2] == ">v>" || plot[i+1][m2] == ">> " || plot[i+1][m2] == "---" || plot[i+1][m2] == ">+>" || plot[i+1][m2] == "   " || plot[i+1][m2] == ">>>" || m2 < m1
+            plot[k+1][m2] = plot[i][m2]
+            plot[k+2][m2] = plot[i+1][m2]
+            (k+3..i+1).each{ |ix|
+              # puts "is #{ix}"
+              # puts "plot ix m #{plot[ix][m]}"
+              plot[ix][m2] = plot[i+2][m2]
+            }
+            m2 += 1
+          end
       
-        i += 5
+      
+          # plot[k] = plot[k][0...node_col] + plot[i-1][node_col..-1]
+          # plot[k+1] = plot[k+1][0...node_col] + plot[i][node_col..-1]
+          # plot[k+2] = plot[k+2][0...node_col] + plot[i+1][node_col..-1]
+      
+          # plot.delete_at(i)
+          until plot[k+6].any?{|x| x.class == Integer}
+            # puts "DELETE xxxxxxx"
+            plot.delete_at(k+5)
+          end
+      
+          i = k+6
+          # gets
+          # break
+          # 5.times{plot.delete_at(i-1)}
+        else
+          # puts "DONT SHIFT"
+          i += 1
+          until plot[i].any?{|x| x.class == Integer}
+            i += 1
+            if i > plot.length - 1
+              break
+            end  
+          end
+          i+=5
+        end
+      
+        # puts "COMPRESSED PLOT STEP"
+        # plot.each{ |r|
+        #   puts r.join
+        # }
       end
 
       @grid = plot.transpose

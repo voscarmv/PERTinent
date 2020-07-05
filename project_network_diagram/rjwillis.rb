@@ -402,23 +402,23 @@ while i < plot.length
     puts "DO SHIFT!"
     # Destination
 
-    m = node_col
-    while plot[i-1][m] == "<v<" || plot[i-1][m] == "<< " || plot[i-1][m] == "---" || plot[i-1][m] == "<+<" || plot[i-1][m] == "   " 
-      plot[k][m] = plot[i-1][m]
-      plot[k+1][m] = plot[i][m]
-      m += 1
+    m1 = node_col
+    while plot[i-1][m1] == "<v<" || plot[i-1][m1] == "<< " || plot[i-1][m1] == "---" || plot[i-1][m1] == "<+<" || plot[i-1][m1] == "   " || plot[i-1][m1] == "<<<" 
+      plot[k][m1] = plot[i-1][m1]
+      plot[k+1][m1] = plot[i][m1]
+      m1 += 1
     end
 
-    m = node_col
-    while plot[i+1][m] == ">v>" || plot[i+1][m] == ">> " || plot[i+1][m] == "---" || plot[i+1][m] == ">+>" || plot[i+1][m] == "   " 
-      plot[k+1][m] = plot[i][m]
-      plot[k+2][m] = plot[i+1][m]
+    m2 = node_col
+    while plot[i+1][m2] == ">v>" || plot[i+1][m2] == ">> " || plot[i+1][m2] == "---" || plot[i+1][m2] == ">+>" || plot[i+1][m2] == "   " || plot[i+1][m2] == ">>>" || m2 < m1
+      plot[k+1][m2] = plot[i][m2]
+      plot[k+2][m2] = plot[i+1][m2]
       (k+3..i+1).each{ |ix|
-        puts "is #{ix}"
-        puts "plot ix m #{plot[ix][m]}"
-        plot[ix][m] = plot[i+2][m]
+        # puts "is #{ix}"
+        # puts "plot ix m #{plot[ix][m]}"
+        plot[ix][m2] = plot[i+2][m2]
       }
-      m += 1
+      m2 += 1
     end
 
 
@@ -439,19 +439,19 @@ while i < plot.length
   else
     # puts "DONT SHIFT"
     i += 1
-    unless plot[i]
-      break
-    end
     until plot[i].any?{|x| x.class == Integer}
       i += 1
+      if i > plot.length - 1
+        break
+      end  
     end
     i+=5
   end
 
-  puts "COMPRESSED PLOT STEP"
-  plot.each{ |r|
-    puts r.join
-  }
+  # puts "COMPRESSED PLOT STEP"
+  # plot.each{ |r|
+  #   puts r.join
+  # }
 end
 
 puts "COMPRESSED PLOT"

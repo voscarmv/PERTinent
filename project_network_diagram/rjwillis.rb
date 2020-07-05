@@ -395,21 +395,34 @@ while i < plot.length
 
   node_col = plot[i].index{|x| x.class == Integer}
 
-  # Destination
-  plot[k] = plot[k][0...node_col] + plot[i-1][node_col..-1]
-  plot[k+1] = plot[k+1][0...node_col] + plot[i][node_col..-1]
-  plot[k+2] = plot[k+2][0...node_col] + plot[i+1][node_col..-1]
+  rowstodelete = j - k
+  k += 3
 
-  plot.delete_at(i-1)
-  plot.delete_at(i)
-  plot.delete_at(i+1)
+  if k < i-1
+    puts "DO SHIFT!"
+    # Destination
+    plot[k] = plot[k][0...node_col] + plot[i-1][node_col..plot[i-1].index("<< ")]
+    plot[k+1] = plot[k+1][0...node_col] + plot[i][node_col..-1]
+    plot[k+2] = plot[k+2][0...node_col] + plot[i+1][node_col..plot[i-1].index(">> ")]
 
-  i += 5
+    plot.delete_at(i)
+    until plot[k+6].any?{|x| x.class == Integer}
+      puts "DELETE xxxxxxx"
+      plot.delete_at(k+5)
+    end
+    # break
+  else
+    puts "DONT SHIFT"
+    i += 1
+    until plot[i].any?{|x| x.class == Integer}
+      i += 1
+    end
+  end
 
-  puts "COMPRESSED PLOT"
-plot.each{ |r|
-  puts r.join
-}
+  puts "COMPRESSED PLOT STEP"
+  plot.each{ |r|
+    puts r.join
+  }
 end
 
 puts "COMPRESSED PLOT"

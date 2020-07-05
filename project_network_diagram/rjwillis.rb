@@ -401,22 +401,51 @@ while i < plot.length
   if k < i-1
     puts "DO SHIFT!"
     # Destination
-    plot[k] = plot[k][0...node_col] + plot[i-1][node_col..plot[i-1].index("<< ")]
-    plot[k+1] = plot[k+1][0...node_col] + plot[i][node_col..-1]
-    plot[k+2] = plot[k+2][0...node_col] + plot[i+1][node_col..plot[i-1].index(">> ")]
 
-    plot.delete_at(i)
+    m = node_col
+    while plot[i-1][m] == "<v<" || plot[i-1][m] == "<< " || plot[i-1][m] == "---" || plot[i-1][m] == "<+<" || plot[i-1][m] == "   " 
+      plot[k][m] = plot[i-1][m]
+      plot[k+1][m] = plot[i][m]
+      m += 1
+    end
+
+    m = node_col
+    while plot[i+1][m] == ">v>" || plot[i+1][m] == ">> " || plot[i+1][m] == "---" || plot[i+1][m] == ">+>" || plot[i+1][m] == "   " 
+      plot[k+1][m] = plot[i][m]
+      plot[k+2][m] = plot[i+1][m]
+      (k+3..i+1).each{ |ix|
+        puts "is #{ix}"
+        puts "plot ix m #{plot[ix][m]}"
+        plot[ix][m] = plot[i+2][m]
+      }
+      m += 1
+    end
+
+
+    # plot[k] = plot[k][0...node_col] + plot[i-1][node_col..-1]
+    # plot[k+1] = plot[k+1][0...node_col] + plot[i][node_col..-1]
+    # plot[k+2] = plot[k+2][0...node_col] + plot[i+1][node_col..-1]
+
+    # plot.delete_at(i)
     until plot[k+6].any?{|x| x.class == Integer}
-      puts "DELETE xxxxxxx"
+      # puts "DELETE xxxxxxx"
       plot.delete_at(k+5)
     end
+
+    i = k+6
+    # gets
     # break
+    # 5.times{plot.delete_at(i-1)}
   else
-    puts "DONT SHIFT"
+    # puts "DONT SHIFT"
     i += 1
+    unless plot[i]
+      break
+    end
     until plot[i].any?{|x| x.class == Integer}
       i += 1
     end
+    i+=5
   end
 
   puts "COMPRESSED PLOT STEP"

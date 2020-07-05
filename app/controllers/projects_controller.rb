@@ -324,8 +324,8 @@ class ProjectsController < ApplicationController
       n2 = nil
       pl = plot.length
 
-      while i+5 < plot.length do
-        puts "Testing nodes"
+      while i+5 < pl do
+        puts "Testing nodes, i = #{i}"
         j = plot[i].index{|x| x.class == Integer}
         above = plot[i-2][j]
         below = plot[i+2][j]
@@ -353,7 +353,14 @@ class ProjectsController < ApplicationController
           if above == " v " && below == " v " && above_corner[0] != "<" && below_corner[0] != ">"
             p "Found second node"
             n2 = [s,t]
+          else
+            n2 = nil
           end
+
+          puts "n1"
+          p n1
+          puts "n2"
+          p n2
       
           if n1 && n2
             p "Check if nodes are compatible for sliding"
@@ -387,6 +394,9 @@ class ProjectsController < ApplicationController
       
               plot.slice!(r1+2, 5)
 
+              pl = plot.length
+
+              # n2 = nil
               next
               # sliceis.each{|r|
               #   p r.join
@@ -397,6 +407,7 @@ class ProjectsController < ApplicationController
           end
       
         end
+        pl = plot.length
       
         i += 5
       end

@@ -178,12 +178,13 @@ table.each_with_index{ |r, k|
         # puts "plot[i-1][ix] #{plot[i-1][ix]}"
         if plot[i-1][ix] == " v "
           lf = true
+        else
+          if below 
+            rf = true
+            plot[i+3][ix] = " v "
+            plot[i+4][ix] = " v "
+          end
         end
-        if below
-          rf = true
-          plot[i+3][ix] = " v "
-          plot[i+4][ix] = " v "
-        end 
       else
         if lf
           lf = false
@@ -240,20 +241,12 @@ table.each_with_index{ |r, k|
             plot[i+3][ix] = " v "
             plot[i+4][ix] = " v "
           else
-            if l1
-              plot[i][ix] = "<< "
-              l1 = false
-            else
-              plot[i][ix] = "<v<"
-            end
-            if r1
-              plot[i+2][ix] = ">> "
-              r1 = false
-            else
-              plot[i+2][ix] = ">>>"
-            end  
+            plot[i][ix] = "<v<"
+            plot[i+1][ix] = "   "
+            plot[i+2][ix] = ">v>"
+            plot[i+3][ix] = " v "
+            plot[i+4][ix] = " v "  
           end
-
         end
       else
         if !lf && rf

@@ -412,92 +412,98 @@ class ProjectsController < ApplicationController
       #   i += 5
       # end
 
-      def collision(r1, r2)
-        if r1.length != r2.length
-          nil
-        end
-        r1.zip(r2).each{ |c1, c2| 
-          if c1 == "<<<" || c1 == "<< " || c1 == "<+<" || c1 == "---" || c1 == "<v<"
-            if c2 == ">>>" || c2 == ">> " || c2 == ">+>" || c2 == "---" || c2 == ">v>" || c2 == "<<<" || c2 == "<< " || c2 == "<+<" || c2 == "---" || c2 == "<v<"
-              puts "c1 #{c1} c2 #{c2}"
-              return true
-            end
-          end
-        }
-        return false
-      end
+
+
+
+
+
+
+      # def collision(r1, r2)
+      #   if r1.length != r2.length
+      #     nil
+      #   end
+      #   r1.zip(r2).each{ |c1, c2| 
+      #     if c1 == "<<<" || c1 == "<< " || c1 == "<+<" || c1 == "---" || c1 == "<v<"
+      #       if c2 == ">>>" || c2 == ">> " || c2 == ">+>" || c2 == "---" || c2 == ">v>" || c2 == "<<<" || c2 == "<< " || c2 == "<+<" || c2 == "---" || c2 == "<v<"
+      #         puts "c1 #{c1} c2 #{c2}"
+      #         return true
+      #       end
+      #     end
+      #   }
+      #   return false
+      # end
       
-      i = 7
+      # i = 7
       
-      while i < plot.length 
-        j = i - 1
-        k = j - 3
-        puts "Node #{plot[i].select{|x| x.class == Integer}}"
-        until collision(plot[j], plot[k])
-          k -= 1
-        end
-        puts "Shift to #{k}"
+      # while i < plot.length 
+      #   j = i - 1
+      #   k = j - 3
+      #   puts "Node #{plot[i].select{|x| x.class == Integer}}"
+      #   until collision(plot[j], plot[k])
+      #     k -= 1
+      #   end
+      #   puts "Shift to #{k}"
       
-        node_col = plot[i].index{|x| x.class == Integer}
+      #   node_col = plot[i].index{|x| x.class == Integer}
       
-        rowstodelete = j - k
-        k += 3
+      #   rowstodelete = j - k
+      #   k += 3
       
-        if k < i-1
-          puts "DO SHIFT!"
-          # Destination
+      #   if k < i-1
+      #     puts "DO SHIFT!"
+      #     # Destination
       
-          m1 = node_col
-          while plot[i-1][m1] == "<v<" || plot[i-1][m1] == "<< " || plot[i-1][m1] == "---" || plot[i-1][m1] == "<+<" || plot[i-1][m1] == "   " || plot[i-1][m1] == "<<<" 
-            plot[k][m1] = plot[i-1][m1]
-            plot[k+1][m1] = plot[i][m1]
-            m1 += 1
-          end
+      #     m1 = node_col
+      #     while plot[i-1][m1] == "<v<" || plot[i-1][m1] == "<< " || plot[i-1][m1] == "---" || plot[i-1][m1] == "<+<" || plot[i-1][m1] == "   " || plot[i-1][m1] == "<<<" 
+      #       plot[k][m1] = plot[i-1][m1]
+      #       plot[k+1][m1] = plot[i][m1]
+      #       m1 += 1
+      #     end
       
-          m2 = node_col
-          while plot[i+1][m2] == ">v>" || plot[i+1][m2] == ">> " || plot[i+1][m2] == "---" || plot[i+1][m2] == ">+>" || plot[i+1][m2] == "   " || plot[i+1][m2] == ">>>" || m2 < m1
-            plot[k+1][m2] = plot[i][m2]
-            plot[k+2][m2] = plot[i+1][m2]
-            (k+3..i+1).each{ |ix|
-              # puts "is #{ix}"
-              # puts "plot ix m #{plot[ix][m]}"
-              plot[ix][m2] = plot[i+2][m2]
-            }
-            m2 += 1
-          end
+      #     m2 = node_col
+      #     while plot[i+1][m2] == ">v>" || plot[i+1][m2] == ">> " || plot[i+1][m2] == "---" || plot[i+1][m2] == ">+>" || plot[i+1][m2] == "   " || plot[i+1][m2] == ">>>" || m2 < m1
+      #       plot[k+1][m2] = plot[i][m2]
+      #       plot[k+2][m2] = plot[i+1][m2]
+      #       (k+3..i+1).each{ |ix|
+      #         # puts "is #{ix}"
+      #         # puts "plot ix m #{plot[ix][m]}"
+      #         plot[ix][m2] = plot[i+2][m2]
+      #       }
+      #       m2 += 1
+      #     end
       
       
-          # plot[k] = plot[k][0...node_col] + plot[i-1][node_col..-1]
-          # plot[k+1] = plot[k+1][0...node_col] + plot[i][node_col..-1]
-          # plot[k+2] = plot[k+2][0...node_col] + plot[i+1][node_col..-1]
+      #     # plot[k] = plot[k][0...node_col] + plot[i-1][node_col..-1]
+      #     # plot[k+1] = plot[k+1][0...node_col] + plot[i][node_col..-1]
+      #     # plot[k+2] = plot[k+2][0...node_col] + plot[i+1][node_col..-1]
       
-          # plot.delete_at(i)
-          until plot[k+6].any?{|x| x.class == Integer}
-            # puts "DELETE xxxxxxx"
-            plot.delete_at(k+5)
-          end
+      #     # plot.delete_at(i)
+      #     until plot[k+6].any?{|x| x.class == Integer}
+      #       # puts "DELETE xxxxxxx"
+      #       plot.delete_at(k+5)
+      #     end
       
-          i = k+6
-          # gets
-          # break
-          # 5.times{plot.delete_at(i-1)}
-        else
-          # puts "DONT SHIFT"
-          i += 1
-          until plot[i].any?{|x| x.class == Integer}
-            i += 1
-            if i > plot.length - 1
-              break
-            end  
-          end
-          i+=5
-        end
+      #     i = k+6
+      #     # gets
+      #     # break
+      #     # 5.times{plot.delete_at(i-1)}
+      #   else
+      #     # puts "DONT SHIFT"
+      #     i += 1
+      #     until plot[i].any?{|x| x.class == Integer}
+      #       i += 1
+      #       if i > plot.length - 1
+      #         break
+      #       end  
+      #     end
+      #     i+=5
+      #   end
       
-        # puts "COMPRESSED PLOT STEP"
-        # plot.each{ |r|
-        #   puts r.join
-        # }
-      end
+      #   # puts "COMPRESSED PLOT STEP"
+      #   # plot.each{ |r|
+      #   #   puts r.join
+      #   # }
+      # end
 
       @grid = plot.transpose
       @root_n = Node.find_by(id: endnode)

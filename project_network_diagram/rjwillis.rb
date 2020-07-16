@@ -3,14 +3,14 @@
 # R.J.Willis†
 
 
-edges = [[26, 25], [27, 25], [27, 25], [29, 26], [28, 29], [30, 26], [28, 30], [27, 25], [27, 25], [31, 27], [28, 31], [32, 27], [33, 27], [34, 27], [35, 25], [36, 25], [37, 25], [38, 36], [39, 36], [26, 36], [27, 36], [35, 36], [36, 37], [44, 25], [45, 44], [50, 27], [51, 50], [52, 50], [53, 44], [54, 53], [55, 53], [56, 53], [57, 53], [58, 44], [59, 58], [60, 58], [61, 44], [62, 61], [63, 61], [64, 61], [65, 25], [66, 44], [-1, 28], [-1, 32], [-1, 33], [-1, 34], [-1, 35], [-1, 38], [-1, 39], [-1, 45], [-1, 51], [-1, 52], [-1, 54], [-1, 55], [-1, 56], [-1, 57], [-1, 59], [-1, 60], [-1, 62], [-1, 63], [-1, 64], [-1, 65], [-1, 66]]
+edges =  [[26, 25], [26, 36], [27, 25], [27, 36], [28, 29], [28, 30], [28, 31], [29, 26], [30, 26], [31, 27], [32, 27], [33, 27], [34, 27], [35, 25], [35, 36], [36, 25], [36, 37], [37, 25], [38, 36], [39, 36], [44, 25], [45, 44], [50, 27], [51, 50], [52, 50], [53, 44], [54, 53], [55, 53], [56, 53], [57, 53], [58, 44], [59, 58], [60, 58], [61, 44], [62, 61], [63, 61], [64, 61], [65, 25], [66, 44]]
 nodes = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 44, 45, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, -1]
 startnode = -1
 endnode = 25
 
-# startpoints = [28, 32, 33, 34, 35, 38, 39, 45, 51, 52, 54, 55, 56, 57, 59, 60, 62, 63, 64, 65, 66]
+startpoints = [28, 32, 33, 34, 35, 38, 39, 45, 51, 52, 54, 55, 56, 57, 59, 60, 62, 63, 64, 65, 66]
 
-# edges += startpoints.map{|n| [startnode, n]}
+edges += startpoints.map{|n| [startnode, n]}
 # [-1]
 
 
@@ -63,7 +63,8 @@ pnd.map! { |e|
   e = [e, nest1]
 }
 
-p pnd
+ pnd.each{|e| p e}
+# return "exit"
 table = Array.new(nodes.length){Array.new(1,0)}
       
 pnd.each{ |activity|
@@ -145,6 +146,7 @@ table.each_with_index{ |r, k|
     plot.push(Array.new(r.length,"   "))
   }
   e = r.index { |c| c != 0 }
+  puts "Plot node #{e} value #{r[e]}"
   plot[i][e] = "---"
   plot[i+1][e] = r[e]
   plot[i+2][e] = "---"
@@ -162,6 +164,12 @@ table.each_with_index{ |r, k|
       puts "col shift #{colcpy}"
       puts "col shift index #{colcpy.index {|c| c != 0}}"
       below = colcpy.index {|c| c != 0}
+      if below
+        if colcpy[below] == 27
+          puts "BELOWUNM!! #{colcpy[below]}"
+          gets      
+        end  
+      end
       if below
         plot[i+3][ix] = " v "
         plot[i+4][ix] = " v "
@@ -186,6 +194,13 @@ table.each_with_index{ |r, k|
       end
     end
     if ix != e
+      colcpy = cols[ix].dup
+      colcpy.shift(k+1)
+      puts "val #{v}"
+      puts "col #{colcpy}"
+      puts "col shift #{colcpy}"
+      puts "col shift index #{colcpy.index {|c| c != 0}}"
+      below = colcpy.index {|c| c != 0}
       if plot[i-1][ix] == " v "
         if !lf && !rf
           plot[i][ix] = " v "
@@ -218,22 +233,27 @@ table.each_with_index{ |r, k|
           end
         end
         if lf && rf
-          if l1
-            plot[i][ix] = "<< "
-            l1 = false
+          if below
+            plot[i][ix] = "<+<"
+            plot[i+1][ix] = " v "
+            plot[i+2][ix] = ">+>"
+            plot[i+3][ix] = " v "
+            plot[i+4][ix] = " v "
           else
-            plot[i][ix] = "<v<"
-          end
-          if r1
-            plot[i+2][ix] = ">> "
-            r1 = false
-          else
-            if below
-              plot[i+2][ix] = ">v>"
+            if l1
+              plot[i][ix] = "<< "
+              l1 = false
+            else
+              plot[i][ix] = "<v<"
+            end
+            if r1
+              plot[i+2][ix] = ">> "
+              r1 = false
             else
               plot[i+2][ix] = ">>>"
-            end
+            end  
           end
+
         end
       else
         if !lf && rf
@@ -276,10 +296,15 @@ table.each_with_index{ |r, k|
         end
       end
     end
+    if r[e] == 26
+      gets
+    end
+
   }
-  puts "this"
-  p plot[i-1]
+  # puts "this"
+  # p plot[i-1]
   i+=5
+  # gets
 }
 
 puts "PLOT"
@@ -453,6 +478,16 @@ while i < plot.length
   #   puts r.join
   # }
 end
+
+puts "TABLE"
+table.each{ |r|
+  p r
+}
+
+puts "PLOT"
+plot.each{ |r|
+  puts r.join
+}
 
 puts "COMPRESSED PLOT"
 plot.each{ |r|

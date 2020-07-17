@@ -73,10 +73,10 @@ pnd.map! { |e|
 # the same column.
 
 # To solve this, I intend to modify the original algorithm in such a way that each node will
-# correspong to two rows, instead of a single row. I will use the top row to denote incoming
+# correspond to two rows, instead of a single row. I will use the top row to denote incoming
 # arrows, and the bottom row to denote outgoing arrows.
 
-# This should rid the algorithm of the ambiguity presented in R. J. Willis' version.
+# This should rid the algorithm of the ambiguity present in R. J. Willis' version.
 
 table = Array.new(nodes.length*2){Array.new(1,0)}
       
@@ -119,7 +119,9 @@ pnd.each{ |activity|
     cols[x].shift(nest1s)
     if cols[x].all?(0)
       table[nest1s-1][x] = startnode
+      ###
       table[nest1e-2][x] = endnode
+      ###
       found = true
       puts "found1"
       break
@@ -135,7 +137,9 @@ pnd.each{ |activity|
     cols[x].shift(nest1s)
     if cols[x].all?(0)
       table[nest1s-1][x] = startnode
+      ###
       table[nest1e-2][x] = endnode
+      ###
       found = true
       puts "found2"
     end
@@ -154,7 +158,319 @@ table.each{ |r|
   p r
 }
 
+# return "exit"
+
+plot = Array.new()
+
+plot.push(Array.new(table[0].length,"   "))
+i = 1
+table_index = 0
+cols = table.transpose
+
+(table.length/2).times{
+  5.times{
+    plot.push(Array.new(table[0].length,"   "))
+  }
+
+  row_incoming = table[table_index]
+  row_outgoing = table[table_index + 1]
+
+  incoming_first = row_incoming.index{|c| c != 0}
+  outgoing_first = row_outgoing.index{|c| c != 0}
+
+  if incoming_first.nil?
+    first = outgoing_first
+    node = row_outgoing[outgoing_first]
+  elsif outgoing_first.nil?
+    first = incoming_first
+    node = row_incoming[incoming_first]
+  else
+    first = [incoming_first, outgoing_first].min
+    node = row_incoming[incoming_first]
+  end
+
+  start_in = false
+  first_in = true
+  puts "row in #{row_incoming}"
+
+  row_incoming.reverse.each_with_index{ |ri, j|
+    ix = row_incoming.length - 1 - j
+    if ix == first
+      plot[i][ix] = "---"
+      plot[i+1][ix] = " #{node} "
+      break
+    end
+    if ri != 0
+      start_in = true
+    end
+    if start_in
+      if first_in
+        plot[i][ix] = "<< "
+        first_in = false
+      else
+        if ri != 0
+          plot[i][ix] = "<v<"
+        else
+          plot[i][ix] = "<<<"
+        end
+      end
+    end
+  }
+
+  start_in = false
+  first_in = true
+  row_outgoing.reverse.each_with_index{ |ro, j|
+    ix = row_incoming.length - 1 - j
+    if ix == first
+      plot[i+2][ix] = "---"
+      break
+    end
+    if ro != 0
+      start_in = true
+    end
+    if start_in
+      if first_in
+        plot[i+2][ix] = ">> "
+        first_in = false
+      else
+        if ro != 0
+          plot[i+2][ix] = ">v>"
+        else
+          plot[i+2][ix] = ">>>"
+        end
+      end
+    end
+  }
+
+  puts "in #{row_incoming}"
+  puts "ot #{row_outgoing}"
+
+  table_index += 2
+  i += 5
+}
+
+table[0].length.times{ |col|
+  puts "col ||| #{col}"
+  i = 1
+  inside = false
+  first_inside = true
+  (table.length/2).times{ |row|
+    row_ix = row * 2
+    incoming = table[row_ix][col]
+    outgoing = table[row_ix+1][col]
+    puts "in #{incoming}"
+    puts "out #{outgoing}"
+    if incoming != 0
+      inside = false
+      first_inside = true
+    end
+    if outgoing != 0
+      inside = true
+    end
+    # break if i+4 > plot.length - 1
+    if inside
+      if first_inside
+        # plot[i][ix] = " v "
+        # plot[i+1][ix] = " v "
+        # plot[i+2][ix] = " v "
+        plot[i+3][col] = " v "
+        plot[i+4][col] = " v "
+        first_inside = false
+      else
+        5.times{|r|
+          if plot[i+r][col] == "   "
+            plot[i+r][col] = " v "
+          elsif plot[i+r][col] == ">>>"
+            plot[i+r][col] = ">+>"
+          elsif plot[i+r][col] == "<<<"
+            plot[i+r][col] = "<+<"
+          end
+        }  
+      end
+    end
+    # puts " #{plot[i][col]}"
+    # puts " #{plot[i+1][col]}"
+    # puts " #{plot[i+2][col]}"
+    # puts " #{plot[i+3][col]}"
+    # puts " #{plot[i+4][col]}"
+    # puts "col"
+    # gets
+    i += 5
+  }
+}
+
+puts "PLOT"
+plot.each{ |r|
+  puts r.join
+}
+
 return "exit"
+
+table.each_with_index{ |r, k|
+  5.times{
+    plot.push(Array.new(r.length,"   "))
+  }
+  e = r.index { |c| c != 0 }
+  puts "Plot node #{e} value #{r[e]}"
+  plot[i][e] = "---"
+  plot[i+1][e] = r[e]
+  plot[i+2][e] = "---"
+  lf = false
+  rf = false
+  l1 = true
+  r1 = true
+  r.reverse.each_with_index{ |v, j|
+    ix = r.length - 1 - j
+    if v != 0
+      colcpy = cols[ix].dup
+      colcpy.shift(k+1)
+      puts "val #{v}"
+      puts "col #{colcpy}"
+      puts "col shift #{colcpy}"
+      puts "col shift index #{colcpy.index {|c| c != 0}}"
+      below = colcpy.index {|c| c != 0}
+      if below
+        if colcpy[below] == 27
+          puts "BELOWUNM!! #{colcpy[below]}"
+          gets      
+        end  
+      end
+      if below
+        plot[i+3][ix] = " v "
+        plot[i+4][ix] = " v "
+      end
+      if ix != e
+        # puts "plot[i-1][ix] #{plot[i-1][ix]}"
+        if plot[i-1][ix] == " v "
+          lf = true
+        else
+          if below 
+            rf = true
+            plot[i+3][ix] = " v "
+            plot[i+4][ix] = " v "
+          end
+        end
+      else
+        if lf
+          lf = false
+        end
+        if rf
+          rf = false
+        end
+      end
+    end
+    if ix != e
+      colcpy = cols[ix].dup
+      colcpy.shift(k+1)
+      puts "val #{v}"
+      puts "col #{colcpy}"
+      puts "col shift #{colcpy}"
+      puts "col shift index #{colcpy.index {|c| c != 0}}"
+      below = colcpy.index {|c| c != 0}
+      if plot[i-1][ix] == " v "
+        if !lf && !rf
+          plot[i][ix] = " v "
+          plot[i+1][ix] = " v "
+          plot[i+2][ix] = " v "
+          plot[i+3][ix] = " v "
+          plot[i+4][ix] = " v "
+        end
+        if !lf && rf
+          plot[i][ix] = " v "
+          plot[i+1][ix] = " v "
+          plot[i+2][ix] = ">+>"
+          plot[i+3][ix] = " v "
+          plot[i+4][ix] = " v "
+        end
+        if lf && !rf
+          if v != 0
+            if l1
+              plot[i][ix] = "<< "
+              l1 = false
+            else
+              plot[i][ix] = "<v<"
+            end  
+          else
+            plot[i][ix] = "<+<"
+            plot[i+1][ix] = " v "
+            plot[i+2][ix] = " v "
+            plot[i+3][ix] = " v "
+            plot[i+4][ix] = " v "
+          end
+        end
+        if lf && rf
+          if below
+            plot[i][ix] = "<+<"
+            plot[i+1][ix] = " v "
+            plot[i+2][ix] = ">+>"
+            plot[i+3][ix] = " v "
+            plot[i+4][ix] = " v "
+          else
+            plot[i][ix] = "<v<"
+            plot[i+1][ix] = "   "
+            plot[i+2][ix] = ">v>"
+            plot[i+3][ix] = " v "
+            plot[i+4][ix] = " v "  
+          end
+        end
+      else
+        if !lf && rf
+          if r1
+            plot[i+2][ix] = ">> "
+            r1 = false
+          else
+            if below
+              plot[i+2][ix] = ">v>"
+            else
+              plot[i+2][ix] = ">>>"
+            end
+          end
+        end
+        if lf && !rf
+          if l1
+            plot[i][ix] = "<< "
+            l1 = false
+          else
+            plot[i][ix] = "<<<"
+          end
+        end
+        if lf && rf
+          if l1
+            plot[i][ix] = "<< "
+            l1 = false
+          else
+            plot[i][ix] = "<<<"
+          end
+          if r1
+            plot[i+2][ix] = ">> "
+            r1 = false
+          else
+            if below
+              plot[i+2][ix] = ">v>"
+            else
+              plot[i+2][ix] = ">>>"
+            end
+          end
+        end
+      end
+    end
+    if r[e] == 26
+      gets
+    end
+
+  }
+  # puts "this"
+  # p plot[i-1]
+  i+=5
+  # gets
+}
+
+puts "PLOT"
+plot.each{ |r|
+  puts r.join
+}
+
+return exit
 
 plot = Array.new()
 

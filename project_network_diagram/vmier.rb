@@ -3,29 +3,29 @@
 # R.J.Willis†
 
 
-edges =  [[26, 25], [26, 36], [27, 25], [27, 36], [28, 29], [28, 30], [28, 31], [29, 26], [30, 26], [31, 27], [32, 27], [33, 27], [34, 27], [35, 25], [35, 36], [36, 25], [36, 37], [37, 25], [38, 36], [39, 36], [44, 25], [45, 44], [50, 27], [51, 50], [52, 50], [53, 44], [54, 53], [55, 53], [56, 53], [57, 53], [58, 44], [59, 58], [60, 58], [61, 44], [62, 61], [63, 61], [64, 61], [65, 25], [66, 44]]
-nodes = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 44, 45, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, -1]
-startnode = -1
-endnode = 25
+# edges =  [[26, 25], [26, 36], [27, 25], [27, 36], [28, 29], [28, 30], [28, 31], [29, 26], [30, 26], [31, 27], [32, 27], [33, 27], [34, 27], [35, 25], [35, 36], [36, 25], [36, 37], [37, 25], [38, 36], [39, 36], [44, 25], [45, 44], [50, 27], [51, 50], [52, 50], [53, 44], [54, 53], [55, 53], [56, 53], [57, 53], [58, 44], [59, 58], [60, 58], [61, 44], [62, 61], [63, 61], [64, 61], [65, 25], [66, 44]]
+# nodes = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 44, 45, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, -1]
+# startnode = -1
+# endnode = 25
 
-startpoints = [28, 32, 33, 34, 35, 38, 39, 45, 51, 52, 54, 55, 56, 57, 59, 60, 62, 63, 64, 65, 66]
+# startpoints = [28, 32, 33, 34, 35, 38, 39, 45, 51, 52, 54, 55, 56, 57, 59, 60, 62, 63, 64, 65, 66]
 
-edges += startpoints.map{|n| [startnode, n]}
+# edges += startpoints.map{|n| [startnode, n]}
 # [-1]
 
 
-# nodes = [1, 2, 3, 4, 5]
-# startnode = 1
-# endnode = 5
-# edges = [
-#   [1, 2],
-#   [1, 3],
-#   [1, 4],
-#   [2, 3],
-#   [2, 5],
-#   [4, 5],
-#   [3, 5]  
-# ]
+nodes = [1, 2, 3, 4, 5]
+startnode = 1
+endnode = 5
+edges = [
+  [1, 2],
+  [1, 3],
+  [1, 4],
+  [2, 3],
+  [2, 5],
+  [4, 5],
+  [3, 5]  
+]
 
 edges.shuffle!
 
@@ -65,7 +65,20 @@ pnd.map! { |e|
 
  pnd.each{|e| p e}
 # return "exit"
-table = Array.new(nodes.length){Array.new(1,0)}
+
+# My intention here is to re-write R. J. Willis' algorithm to fix a bug I found in it.
+# With some graphs, the problem arises that it is indistinguishable if the number
+# in the resulting numerical table from the algorithm is either receiving an incoming arrow,
+# or pointing with an outwards arrow, as there are numbers both above and below it in
+# the same column.
+
+# To solve this, I intend to modify the original algorithm in such a way that each node will
+# correspong to two rows, instead of a single row. I will use the top row to denote incoming
+# arrows, and the bottom row to denote outgoing arrows.
+
+# This should rid the algorithm of the ambiguity presented in R. J. Willis' version.
+
+table = Array.new(nodes.length*2){Array.new(1,0)}
       
 pnd.each{ |activity|
 
@@ -86,6 +99,11 @@ pnd.each{ |activity|
     nest1e = nodes.length
   end
 
+  ####
+  nest1s *= 2
+  nest1e *= 2
+  ####
+
   puts "#{startnode},#{endnode}"
   x = table[nest1s - 1].index {|c| c != 0}
   unless x
@@ -101,7 +119,7 @@ pnd.each{ |activity|
     cols[x].shift(nest1s)
     if cols[x].all?(0)
       table[nest1s-1][x] = startnode
-      table[nest1e-1][x] = endnode
+      table[nest1e-2][x] = endnode
       found = true
       puts "found1"
       break
@@ -117,7 +135,7 @@ pnd.each{ |activity|
     cols[x].shift(nest1s)
     if cols[x].all?(0)
       table[nest1s-1][x] = startnode
-      table[nest1e-1][x] = endnode
+      table[nest1e-2][x] = endnode
       found = true
       puts "found2"
     end
@@ -135,6 +153,8 @@ puts "FINAL TABLE"
 table.each{ |r|
   p r
 }
+
+return "exit"
 
 plot = Array.new()
 

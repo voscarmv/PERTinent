@@ -3,29 +3,29 @@
 # R.J.Willis†
 
 
-# edges =  [[26, 25], [26, 36], [27, 25], [27, 36], [28, 29], [28, 30], [28, 31], [29, 26], [30, 26], [31, 27], [32, 27], [33, 27], [34, 27], [35, 25], [35, 36], [36, 25], [36, 37], [37, 25], [38, 36], [39, 36], [44, 25], [45, 44], [50, 27], [51, 50], [52, 50], [53, 44], [54, 53], [55, 53], [56, 53], [57, 53], [58, 44], [59, 58], [60, 58], [61, 44], [62, 61], [63, 61], [64, 61], [65, 25], [66, 44]]
-# nodes = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 44, 45, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, -1]
-# startnode = -1
-# endnode = 25
+edges =  [[26, 25], [26, 36], [27, 25], [27, 36], [28, 29], [28, 30], [28, 31], [29, 26], [30, 26], [31, 27], [32, 27], [33, 27], [34, 27], [35, 25], [35, 36], [36, 25], [36, 37], [37, 25], [38, 36], [39, 36], [44, 25], [45, 44], [50, 27], [51, 50], [52, 50], [53, 44], [54, 53], [55, 53], [56, 53], [57, 53], [58, 44], [59, 58], [60, 58], [61, 44], [62, 61], [63, 61], [64, 61], [65, 25], [66, 44]]
+nodes = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 44, 45, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, -1]
+startnode = -1
+endnode = 25
 
-# startpoints = [28, 32, 33, 34, 35, 38, 39, 45, 51, 52, 54, 55, 56, 57, 59, 60, 62, 63, 64, 65, 66]
+startpoints = [28, 32, 33, 34, 35, 38, 39, 45, 51, 52, 54, 55, 56, 57, 59, 60, 62, 63, 64, 65, 66]
 
-# edges += startpoints.map{|n| [startnode, n]}
-# [-1]
+edges += startpoints.map{|n| [startnode, n]}
+[-1]
 
 
-nodes = [1, 2, 3, 4, 5]
-startnode = 1
-endnode = 5
-edges = [
-  [1, 2],
-  [1, 3],
-  [1, 4],
-  [2, 3],
-  [2, 5],
-  [4, 5],
-  [3, 5]  
-]
+# nodes = [1, 2, 3, 4, 5]
+# startnode = 1
+# endnode = 5
+# edges = [
+#   [1, 2],
+#   [1, 3],
+#   [1, 4],
+#   [2, 3],
+#   [2, 5],
+#   [4, 5],
+#   [3, 5]  
+# ]
 
 edges.shuffle!
 
@@ -105,7 +105,9 @@ pnd.each{ |activity|
   ####
 
   puts "#{startnode},#{endnode}"
-  x = table[nest1s - 1].index {|c| c != 0}
+  x1 = table[nest1s - 1].index {|c| c != 0}
+  x2 = table[nest1s - 2].index {|c| c != 0}
+  x = x1 || x2
   unless x
     x = 0
   end
@@ -114,9 +116,13 @@ pnd.each{ |activity|
   found = false
   while x < cols.length do
     puts "colx"
-    p cols[x]
+    c2 = cols[x].clone
+    c2[nest1e-1] = "E"
+    c2[nest1s] = "S"
+    p c2
     cols[x].delete_at(nest1e-1)
     cols[x].shift(nest1s)
+    p cols[x]
     if cols[x].all?(0)
       table[nest1s-1][x] = startnode
       ###
@@ -146,16 +152,21 @@ pnd.each{ |activity|
     x += 1    
   end
 
+  if startnode == 53
+    gets
+  end
   puts "TABLE END"
   table.each{ |r|
     p r
   }
-
+  if startnode == 53
+    gets
+  end
 }
 
 puts "FINAL TABLE"
 table.each{ |r|
-  p r
+  puts r.join("\t")
 }
 
 # return "exit"
@@ -197,7 +208,7 @@ cols = table.transpose
     ix = row_incoming.length - 1 - j
     if ix == first
       plot[i][ix] = "---"
-      plot[i+1][ix] = " #{node} "
+      plot[i+1][ix] = node
       break
     end
     if ri != 0
@@ -258,8 +269,8 @@ table[0].length.times{ |col|
     row_ix = row * 2
     incoming = table[row_ix][col]
     outgoing = table[row_ix+1][col]
-    puts "in #{incoming}"
-    puts "out #{outgoing}"
+    # puts "in #{incoming}"
+    # puts "out #{outgoing}"
     if incoming != 0
       inside = false
       first_inside = true
@@ -304,342 +315,342 @@ plot.each{ |r|
   puts r.join
 }
 
-return "exit"
+# return "exit"
 
-table.each_with_index{ |r, k|
-  5.times{
-    plot.push(Array.new(r.length,"   "))
-  }
-  e = r.index { |c| c != 0 }
-  puts "Plot node #{e} value #{r[e]}"
-  plot[i][e] = "---"
-  plot[i+1][e] = r[e]
-  plot[i+2][e] = "---"
-  lf = false
-  rf = false
-  l1 = true
-  r1 = true
-  r.reverse.each_with_index{ |v, j|
-    ix = r.length - 1 - j
-    if v != 0
-      colcpy = cols[ix].dup
-      colcpy.shift(k+1)
-      puts "val #{v}"
-      puts "col #{colcpy}"
-      puts "col shift #{colcpy}"
-      puts "col shift index #{colcpy.index {|c| c != 0}}"
-      below = colcpy.index {|c| c != 0}
-      if below
-        if colcpy[below] == 27
-          puts "BELOWUNM!! #{colcpy[below]}"
-          gets      
-        end  
-      end
-      if below
-        plot[i+3][ix] = " v "
-        plot[i+4][ix] = " v "
-      end
-      if ix != e
-        # puts "plot[i-1][ix] #{plot[i-1][ix]}"
-        if plot[i-1][ix] == " v "
-          lf = true
-        else
-          if below 
-            rf = true
-            plot[i+3][ix] = " v "
-            plot[i+4][ix] = " v "
-          end
-        end
-      else
-        if lf
-          lf = false
-        end
-        if rf
-          rf = false
-        end
-      end
-    end
-    if ix != e
-      colcpy = cols[ix].dup
-      colcpy.shift(k+1)
-      puts "val #{v}"
-      puts "col #{colcpy}"
-      puts "col shift #{colcpy}"
-      puts "col shift index #{colcpy.index {|c| c != 0}}"
-      below = colcpy.index {|c| c != 0}
-      if plot[i-1][ix] == " v "
-        if !lf && !rf
-          plot[i][ix] = " v "
-          plot[i+1][ix] = " v "
-          plot[i+2][ix] = " v "
-          plot[i+3][ix] = " v "
-          plot[i+4][ix] = " v "
-        end
-        if !lf && rf
-          plot[i][ix] = " v "
-          plot[i+1][ix] = " v "
-          plot[i+2][ix] = ">+>"
-          plot[i+3][ix] = " v "
-          plot[i+4][ix] = " v "
-        end
-        if lf && !rf
-          if v != 0
-            if l1
-              plot[i][ix] = "<< "
-              l1 = false
-            else
-              plot[i][ix] = "<v<"
-            end  
-          else
-            plot[i][ix] = "<+<"
-            plot[i+1][ix] = " v "
-            plot[i+2][ix] = " v "
-            plot[i+3][ix] = " v "
-            plot[i+4][ix] = " v "
-          end
-        end
-        if lf && rf
-          if below
-            plot[i][ix] = "<+<"
-            plot[i+1][ix] = " v "
-            plot[i+2][ix] = ">+>"
-            plot[i+3][ix] = " v "
-            plot[i+4][ix] = " v "
-          else
-            plot[i][ix] = "<v<"
-            plot[i+1][ix] = "   "
-            plot[i+2][ix] = ">v>"
-            plot[i+3][ix] = " v "
-            plot[i+4][ix] = " v "  
-          end
-        end
-      else
-        if !lf && rf
-          if r1
-            plot[i+2][ix] = ">> "
-            r1 = false
-          else
-            if below
-              plot[i+2][ix] = ">v>"
-            else
-              plot[i+2][ix] = ">>>"
-            end
-          end
-        end
-        if lf && !rf
-          if l1
-            plot[i][ix] = "<< "
-            l1 = false
-          else
-            plot[i][ix] = "<<<"
-          end
-        end
-        if lf && rf
-          if l1
-            plot[i][ix] = "<< "
-            l1 = false
-          else
-            plot[i][ix] = "<<<"
-          end
-          if r1
-            plot[i+2][ix] = ">> "
-            r1 = false
-          else
-            if below
-              plot[i+2][ix] = ">v>"
-            else
-              plot[i+2][ix] = ">>>"
-            end
-          end
-        end
-      end
-    end
-    if r[e] == 26
-      gets
-    end
+# table.each_with_index{ |r, k|
+#   5.times{
+#     plot.push(Array.new(r.length,"   "))
+#   }
+#   e = r.index { |c| c != 0 }
+#   puts "Plot node #{e} value #{r[e]}"
+#   plot[i][e] = "---"
+#   plot[i+1][e] = r[e]
+#   plot[i+2][e] = "---"
+#   lf = false
+#   rf = false
+#   l1 = true
+#   r1 = true
+#   r.reverse.each_with_index{ |v, j|
+#     ix = r.length - 1 - j
+#     if v != 0
+#       colcpy = cols[ix].dup
+#       colcpy.shift(k+1)
+#       puts "val #{v}"
+#       puts "col #{colcpy}"
+#       puts "col shift #{colcpy}"
+#       puts "col shift index #{colcpy.index {|c| c != 0}}"
+#       below = colcpy.index {|c| c != 0}
+#       if below
+#         if colcpy[below] == 27
+#           puts "BELOWUNM!! #{colcpy[below]}"
+#           gets      
+#         end  
+#       end
+#       if below
+#         plot[i+3][ix] = " v "
+#         plot[i+4][ix] = " v "
+#       end
+#       if ix != e
+#         # puts "plot[i-1][ix] #{plot[i-1][ix]}"
+#         if plot[i-1][ix] == " v "
+#           lf = true
+#         else
+#           if below 
+#             rf = true
+#             plot[i+3][ix] = " v "
+#             plot[i+4][ix] = " v "
+#           end
+#         end
+#       else
+#         if lf
+#           lf = false
+#         end
+#         if rf
+#           rf = false
+#         end
+#       end
+#     end
+#     if ix != e
+#       colcpy = cols[ix].dup
+#       colcpy.shift(k+1)
+#       puts "val #{v}"
+#       puts "col #{colcpy}"
+#       puts "col shift #{colcpy}"
+#       puts "col shift index #{colcpy.index {|c| c != 0}}"
+#       below = colcpy.index {|c| c != 0}
+#       if plot[i-1][ix] == " v "
+#         if !lf && !rf
+#           plot[i][ix] = " v "
+#           plot[i+1][ix] = " v "
+#           plot[i+2][ix] = " v "
+#           plot[i+3][ix] = " v "
+#           plot[i+4][ix] = " v "
+#         end
+#         if !lf && rf
+#           plot[i][ix] = " v "
+#           plot[i+1][ix] = " v "
+#           plot[i+2][ix] = ">+>"
+#           plot[i+3][ix] = " v "
+#           plot[i+4][ix] = " v "
+#         end
+#         if lf && !rf
+#           if v != 0
+#             if l1
+#               plot[i][ix] = "<< "
+#               l1 = false
+#             else
+#               plot[i][ix] = "<v<"
+#             end  
+#           else
+#             plot[i][ix] = "<+<"
+#             plot[i+1][ix] = " v "
+#             plot[i+2][ix] = " v "
+#             plot[i+3][ix] = " v "
+#             plot[i+4][ix] = " v "
+#           end
+#         end
+#         if lf && rf
+#           if below
+#             plot[i][ix] = "<+<"
+#             plot[i+1][ix] = " v "
+#             plot[i+2][ix] = ">+>"
+#             plot[i+3][ix] = " v "
+#             plot[i+4][ix] = " v "
+#           else
+#             plot[i][ix] = "<v<"
+#             plot[i+1][ix] = "   "
+#             plot[i+2][ix] = ">v>"
+#             plot[i+3][ix] = " v "
+#             plot[i+4][ix] = " v "  
+#           end
+#         end
+#       else
+#         if !lf && rf
+#           if r1
+#             plot[i+2][ix] = ">> "
+#             r1 = false
+#           else
+#             if below
+#               plot[i+2][ix] = ">v>"
+#             else
+#               plot[i+2][ix] = ">>>"
+#             end
+#           end
+#         end
+#         if lf && !rf
+#           if l1
+#             plot[i][ix] = "<< "
+#             l1 = false
+#           else
+#             plot[i][ix] = "<<<"
+#           end
+#         end
+#         if lf && rf
+#           if l1
+#             plot[i][ix] = "<< "
+#             l1 = false
+#           else
+#             plot[i][ix] = "<<<"
+#           end
+#           if r1
+#             plot[i+2][ix] = ">> "
+#             r1 = false
+#           else
+#             if below
+#               plot[i+2][ix] = ">v>"
+#             else
+#               plot[i+2][ix] = ">>>"
+#             end
+#           end
+#         end
+#       end
+#     end
+#     if r[e] == 26
+#       gets
+#     end
 
-  }
-  # puts "this"
-  # p plot[i-1]
-  i+=5
-  # gets
-}
+#   }
+#   # puts "this"
+#   # p plot[i-1]
+#   i+=5
+#   # gets
+# }
 
-puts "PLOT"
-plot.each{ |r|
-  puts r.join
-}
+# puts "PLOT"
+# plot.each{ |r|
+#   puts r.join
+# }
 
-return exit
+# return exit
 
-plot = Array.new()
+# plot = Array.new()
 
-plot.push(Array.new(table[0].length,"   "))
-i = 1
-cols = table.transpose
-table.each_with_index{ |r, k|
-  5.times{
-    plot.push(Array.new(r.length,"   "))
-  }
-  e = r.index { |c| c != 0 }
-  puts "Plot node #{e} value #{r[e]}"
-  plot[i][e] = "---"
-  plot[i+1][e] = r[e]
-  plot[i+2][e] = "---"
-  lf = false
-  rf = false
-  l1 = true
-  r1 = true
-  r.reverse.each_with_index{ |v, j|
-    ix = r.length - 1 - j
-    if v != 0
-      colcpy = cols[ix].dup
-      colcpy.shift(k+1)
-      puts "val #{v}"
-      puts "col #{colcpy}"
-      puts "col shift #{colcpy}"
-      puts "col shift index #{colcpy.index {|c| c != 0}}"
-      below = colcpy.index {|c| c != 0}
-      if below
-        if colcpy[below] == 27
-          puts "BELOWUNM!! #{colcpy[below]}"
-          gets      
-        end  
-      end
-      if below
-        plot[i+3][ix] = " v "
-        plot[i+4][ix] = " v "
-      end
-      if ix != e
-        # puts "plot[i-1][ix] #{plot[i-1][ix]}"
-        if plot[i-1][ix] == " v "
-          lf = true
-        else
-          if below 
-            rf = true
-            plot[i+3][ix] = " v "
-            plot[i+4][ix] = " v "
-          end
-        end
-      else
-        if lf
-          lf = false
-        end
-        if rf
-          rf = false
-        end
-      end
-    end
-    if ix != e
-      colcpy = cols[ix].dup
-      colcpy.shift(k+1)
-      puts "val #{v}"
-      puts "col #{colcpy}"
-      puts "col shift #{colcpy}"
-      puts "col shift index #{colcpy.index {|c| c != 0}}"
-      below = colcpy.index {|c| c != 0}
-      if plot[i-1][ix] == " v "
-        if !lf && !rf
-          plot[i][ix] = " v "
-          plot[i+1][ix] = " v "
-          plot[i+2][ix] = " v "
-          plot[i+3][ix] = " v "
-          plot[i+4][ix] = " v "
-        end
-        if !lf && rf
-          plot[i][ix] = " v "
-          plot[i+1][ix] = " v "
-          plot[i+2][ix] = ">+>"
-          plot[i+3][ix] = " v "
-          plot[i+4][ix] = " v "
-        end
-        if lf && !rf
-          if v != 0
-            if l1
-              plot[i][ix] = "<< "
-              l1 = false
-            else
-              plot[i][ix] = "<v<"
-            end  
-          else
-            plot[i][ix] = "<+<"
-            plot[i+1][ix] = " v "
-            plot[i+2][ix] = " v "
-            plot[i+3][ix] = " v "
-            plot[i+4][ix] = " v "
-          end
-        end
-        if lf && rf
-          if below
-            plot[i][ix] = "<+<"
-            plot[i+1][ix] = " v "
-            plot[i+2][ix] = ">+>"
-            plot[i+3][ix] = " v "
-            plot[i+4][ix] = " v "
-          else
-            plot[i][ix] = "<v<"
-            plot[i+1][ix] = "   "
-            plot[i+2][ix] = ">v>"
-            plot[i+3][ix] = " v "
-            plot[i+4][ix] = " v "  
-          end
-        end
-      else
-        if !lf && rf
-          if r1
-            plot[i+2][ix] = ">> "
-            r1 = false
-          else
-            if below
-              plot[i+2][ix] = ">v>"
-            else
-              plot[i+2][ix] = ">>>"
-            end
-          end
-        end
-        if lf && !rf
-          if l1
-            plot[i][ix] = "<< "
-            l1 = false
-          else
-            plot[i][ix] = "<<<"
-          end
-        end
-        if lf && rf
-          if l1
-            plot[i][ix] = "<< "
-            l1 = false
-          else
-            plot[i][ix] = "<<<"
-          end
-          if r1
-            plot[i+2][ix] = ">> "
-            r1 = false
-          else
-            if below
-              plot[i+2][ix] = ">v>"
-            else
-              plot[i+2][ix] = ">>>"
-            end
-          end
-        end
-      end
-    end
-    if r[e] == 26
-      gets
-    end
+# plot.push(Array.new(table[0].length,"   "))
+# i = 1
+# cols = table.transpose
+# table.each_with_index{ |r, k|
+#   5.times{
+#     plot.push(Array.new(r.length,"   "))
+#   }
+#   e = r.index { |c| c != 0 }
+#   puts "Plot node #{e} value #{r[e]}"
+#   plot[i][e] = "---"
+#   plot[i+1][e] = r[e]
+#   plot[i+2][e] = "---"
+#   lf = false
+#   rf = false
+#   l1 = true
+#   r1 = true
+#   r.reverse.each_with_index{ |v, j|
+#     ix = r.length - 1 - j
+#     if v != 0
+#       colcpy = cols[ix].dup
+#       colcpy.shift(k+1)
+#       puts "val #{v}"
+#       puts "col #{colcpy}"
+#       puts "col shift #{colcpy}"
+#       puts "col shift index #{colcpy.index {|c| c != 0}}"
+#       below = colcpy.index {|c| c != 0}
+#       if below
+#         if colcpy[below] == 27
+#           puts "BELOWUNM!! #{colcpy[below]}"
+#           gets      
+#         end  
+#       end
+#       if below
+#         plot[i+3][ix] = " v "
+#         plot[i+4][ix] = " v "
+#       end
+#       if ix != e
+#         # puts "plot[i-1][ix] #{plot[i-1][ix]}"
+#         if plot[i-1][ix] == " v "
+#           lf = true
+#         else
+#           if below 
+#             rf = true
+#             plot[i+3][ix] = " v "
+#             plot[i+4][ix] = " v "
+#           end
+#         end
+#       else
+#         if lf
+#           lf = false
+#         end
+#         if rf
+#           rf = false
+#         end
+#       end
+#     end
+#     if ix != e
+#       colcpy = cols[ix].dup
+#       colcpy.shift(k+1)
+#       puts "val #{v}"
+#       puts "col #{colcpy}"
+#       puts "col shift #{colcpy}"
+#       puts "col shift index #{colcpy.index {|c| c != 0}}"
+#       below = colcpy.index {|c| c != 0}
+#       if plot[i-1][ix] == " v "
+#         if !lf && !rf
+#           plot[i][ix] = " v "
+#           plot[i+1][ix] = " v "
+#           plot[i+2][ix] = " v "
+#           plot[i+3][ix] = " v "
+#           plot[i+4][ix] = " v "
+#         end
+#         if !lf && rf
+#           plot[i][ix] = " v "
+#           plot[i+1][ix] = " v "
+#           plot[i+2][ix] = ">+>"
+#           plot[i+3][ix] = " v "
+#           plot[i+4][ix] = " v "
+#         end
+#         if lf && !rf
+#           if v != 0
+#             if l1
+#               plot[i][ix] = "<< "
+#               l1 = false
+#             else
+#               plot[i][ix] = "<v<"
+#             end  
+#           else
+#             plot[i][ix] = "<+<"
+#             plot[i+1][ix] = " v "
+#             plot[i+2][ix] = " v "
+#             plot[i+3][ix] = " v "
+#             plot[i+4][ix] = " v "
+#           end
+#         end
+#         if lf && rf
+#           if below
+#             plot[i][ix] = "<+<"
+#             plot[i+1][ix] = " v "
+#             plot[i+2][ix] = ">+>"
+#             plot[i+3][ix] = " v "
+#             plot[i+4][ix] = " v "
+#           else
+#             plot[i][ix] = "<v<"
+#             plot[i+1][ix] = "   "
+#             plot[i+2][ix] = ">v>"
+#             plot[i+3][ix] = " v "
+#             plot[i+4][ix] = " v "  
+#           end
+#         end
+#       else
+#         if !lf && rf
+#           if r1
+#             plot[i+2][ix] = ">> "
+#             r1 = false
+#           else
+#             if below
+#               plot[i+2][ix] = ">v>"
+#             else
+#               plot[i+2][ix] = ">>>"
+#             end
+#           end
+#         end
+#         if lf && !rf
+#           if l1
+#             plot[i][ix] = "<< "
+#             l1 = false
+#           else
+#             plot[i][ix] = "<<<"
+#           end
+#         end
+#         if lf && rf
+#           if l1
+#             plot[i][ix] = "<< "
+#             l1 = false
+#           else
+#             plot[i][ix] = "<<<"
+#           end
+#           if r1
+#             plot[i+2][ix] = ">> "
+#             r1 = false
+#           else
+#             if below
+#               plot[i+2][ix] = ">v>"
+#             else
+#               plot[i+2][ix] = ">>>"
+#             end
+#           end
+#         end
+#       end
+#     end
+#     if r[e] == 26
+#       gets
+#     end
 
-  }
-  # puts "this"
-  # p plot[i-1]
-  i+=5
-  # gets
-}
+#   }
+#   # puts "this"
+#   # p plot[i-1]
+#   i+=5
+#   # gets
+# }
 
-puts "PLOT"
-plot.each{ |r|
-  puts r.join
-}
+# puts "PLOT"
+# plot.each{ |r|
+#   puts r.join
+# }
 
 # i = 7
 # n1 = nil
@@ -813,10 +824,10 @@ table.each{ |r|
   puts r.join("\t")
 }
 
-puts "PLOT"
-plot.each{ |r|
-  puts r.join
-}
+# puts "PLOT"
+# plot.each{ |r|
+#   puts r.join
+# }
 
 puts "COMPRESSED PLOT"
 plot.each{ |r|

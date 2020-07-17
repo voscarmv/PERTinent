@@ -96,9 +96,13 @@ pnd.each{ |activity|
   found = false
   while x < cols.length do
     puts "colx"
-    p cols[x]
+    c2 = cols[x].clone
+    c2[nest1e-1] = "E"
+    c2[nest1s] = "S"
+    p c2
     cols[x].delete_at(nest1e-1)
     cols[x].shift(nest1s)
+    p cols[x]
     if cols[x].all?(0)
       table[nest1s-1][x] = startnode
       table[nest1e-1][x] = endnode
@@ -123,11 +127,16 @@ pnd.each{ |activity|
     end
     x += 1    
   end
-
+  if startnode == 53
+    gets
+  end
   puts "TABLE END"
   table.each{ |r|
     p r
   }
+  if startnode == 53
+    gets
+  end
 
 }
 
@@ -167,7 +176,7 @@ table.each_with_index{ |r, k|
       if below
         if colcpy[below] == 27
           puts "BELOWUNM!! #{colcpy[below]}"
-          gets      
+          # gets      
         end  
       end
       if below
@@ -290,7 +299,7 @@ table.each_with_index{ |r, k|
       end
     end
     if r[e] == 26
-      gets
+      # gets
     end
 
   }
@@ -477,10 +486,10 @@ table.each{ |r|
   puts r.join("\t")
 }
 
-puts "PLOT"
-plot.each{ |r|
-  puts r.join
-}
+# puts "PLOT"
+# plot.each{ |r|
+#   puts r.join
+# }
 
 puts "COMPRESSED PLOT"
 plot.each{ |r|

@@ -92,7 +92,7 @@ class ProjectsController < ApplicationController
       #   [[8, 9], 8],
       # ]
       
-      table = Array.new(nodes.length){Array.new(1,0)}
+      table = Array.new(nodes.length*2){Array.new(1,0)}
       
       pnd.each{ |activity|
       
@@ -113,8 +113,15 @@ class ProjectsController < ApplicationController
           nest1e = nodes.length
         end
       
+        ####
+        nest1s *= 2
+        nest1e *= 2
+        ####
+      
         puts "#{startnode},#{endnode}"
-        x = table[nest1s - 1].index {|c| c != 0}
+        x1 = table[nest1s - 1].index {|c| c != 0}
+        x2 = table[nest1s - 2].index {|c| c != 0}
+        x = x1 || x2
         unless x
           x = 0
         end
@@ -123,12 +130,18 @@ class ProjectsController < ApplicationController
         found = false
         while x < cols.length do
           puts "colx"
-          p cols[x]
+          c2 = cols[x].clone
+          c2[nest1e-1] = "E"
+          c2[nest1s] = "S"
+          p c2
           cols[x].delete_at(nest1e-1)
           cols[x].shift(nest1s)
+          p cols[x]
           if cols[x].all?(0)
             table[nest1s-1][x] = startnode
-            table[nest1e-1][x] = endnode
+            ###
+            table[nest1e-2][x] = endnode
+            ###
             found = true
             puts "found1"
             break
@@ -144,7 +157,9 @@ class ProjectsController < ApplicationController
           cols[x].shift(nest1s)
           if cols[x].all?(0)
             table[nest1s-1][x] = startnode
-            table[nest1e-1][x] = endnode
+            ###
+            table[nest1e-2][x] = endnode
+            ###
             found = true
             puts "found2"
           end
@@ -155,161 +170,154 @@ class ProjectsController < ApplicationController
         table.each{ |r|
           p r
         }
-      
       }
       
       puts "FINAL TABLE"
       table.each{ |r|
-        p r
+        puts r.join("\t")
       }
+      
+      # return "exit"
       
       plot = Array.new()
       
       plot.push(Array.new(table[0].length,"   "))
       i = 1
+      table_index = 0
       cols = table.transpose
-      table.each_with_index{ |r, k|
+      
+      (table.length/2).times{
         5.times{
-          plot.push(Array.new(r.length,"   "))
+          plot.push(Array.new(table[0].length,"   "))
         }
-        e = r.index { |c| c != 0 }
-        plot[i][e] = "---"
-        plot[i+1][e] = r[e]
-        plot[i+2][e] = "---"
-        lf = false
-        rf = false
-        l1 = true
-        r1 = true
-        r.reverse.each_with_index{ |v, j|
-          ix = r.length - 1 - j
-          if v != 0
-            colcpy = cols[ix].dup
-            colcpy.shift(k+1)
-            puts "val #{v}"
-            puts "col #{colcpy}"
-            puts "col shift #{colcpy}"
-            puts "col shift index #{colcpy.index {|c| c != 0}}"
-            below = colcpy.index {|c| c != 0}
-            if below
-              plot[i+3][ix] = " v "
-              plot[i+4][ix] = " v "
-            end
-            if ix != e
-              # puts "plot[i-1][ix] #{plot[i-1][ix]}"
-              if plot[i-1][ix] == " v "
-                lf = true
-              end
-              if below
-                rf = true
-                plot[i+3][ix] = " v "
-                plot[i+4][ix] = " v "
-              end 
-            else
-              if lf
-                lf = false
-              end
-              if rf
-                rf = false
-              end
-            end
+      
+        row_incoming = table[table_index]
+        row_outgoing = table[table_index + 1]
+      
+        incoming_first = row_incoming.index{|c| c != 0}
+        outgoing_first = row_outgoing.index{|c| c != 0}
+      
+        if incoming_first.nil?
+          first = outgoing_first
+          node = row_outgoing[outgoing_first]
+        elsif outgoing_first.nil?
+          first = incoming_first
+          node = row_incoming[incoming_first]
+        else
+          first = [incoming_first, outgoing_first].min
+          node = row_incoming[incoming_first]
+        end
+      
+        start_in = false
+        first_in = true
+        puts "row in #{row_incoming}"
+      
+        row_incoming.reverse.each_with_index{ |ri, j|
+          ix = row_incoming.length - 1 - j
+          if ix == first
+            plot[i][ix] = "---"
+            plot[i+1][ix] = node
+            break
           end
-          if ix != e
-            if plot[i-1][ix] == " v "
-              if !lf && !rf
-                plot[i][ix] = " v "
-                plot[i+1][ix] = " v "
-                plot[i+2][ix] = " v "
-                plot[i+3][ix] = " v "
-                plot[i+4][ix] = " v "
-              end
-              if !lf && rf
-                plot[i][ix] = " v "
-                plot[i+1][ix] = " v "
-                plot[i+2][ix] = ">+>"
-                plot[i+3][ix] = " v "
-                plot[i+4][ix] = " v "
-              end
-              if lf && !rf
-                if v != 0
-                  if l1
-                    plot[i][ix] = "<< "
-                    l1 = false
-                  else
-                    plot[i][ix] = "<v<"
-                  end  
-                else
-                  plot[i][ix] = "<+<"
-                  plot[i+1][ix] = " v "
-                  plot[i+2][ix] = " v "
-                  plot[i+3][ix] = " v "
-                  plot[i+4][ix] = " v "
-                end
-              end
-              if lf && rf
-                if l1
-                  plot[i][ix] = "<< "
-                  l1 = false
-                else
-                  plot[i][ix] = "<v<"
-                end
-                if r1
-                  plot[i+2][ix] = ">> "
-                  r1 = false
-                else
-                  if below
-                    plot[i+2][ix] = ">v>"
-                  else
-                    plot[i+2][ix] = ">>>"
-                  end
-                end
-              end
+          if ri != 0
+            start_in = true
+          end
+          if start_in
+            if first_in
+              plot[i][ix] = "<< "
+              first_in = false
             else
-              if !lf && rf
-                if r1
-                  plot[i+2][ix] = ">> "
-                  r1 = false
-                else
-                  if below
-                    plot[i+2][ix] = ">v>"
-                  else
-                    plot[i+2][ix] = ">>>"
-                  end
-                end
-              end
-              if lf && !rf
-                if l1
-                  plot[i][ix] = "<< "
-                  l1 = false
-                else
-                  plot[i][ix] = "<<<"
-                end
-              end
-              if lf && rf
-                if l1
-                  plot[i][ix] = "<< "
-                  l1 = false
-                else
-                  plot[i][ix] = "<<<"
-                end
-                if r1
-                  plot[i+2][ix] = ">> "
-                  r1 = false
-                else
-                  if below
-                    plot[i+2][ix] = ">v>"
-                  else
-                    plot[i+2][ix] = ">>>"
-                  end
-                end
+              if ri != 0
+                plot[i][ix] = "<v<"
+              else
+                plot[i][ix] = "<<<"
               end
             end
           end
         }
-        puts "this"
-        p plot[i-1]
-        i+=5
+      
+        start_in = false
+        first_in = true
+        row_outgoing.reverse.each_with_index{ |ro, j|
+          ix = row_incoming.length - 1 - j
+          if ix == first
+            plot[i+2][ix] = "---"
+            break
+          end
+          if ro != 0
+            start_in = true
+          end
+          if start_in
+            if first_in
+              plot[i+2][ix] = ">> "
+              first_in = false
+            else
+              if ro != 0
+                plot[i+2][ix] = ">v>"
+              else
+                plot[i+2][ix] = ">>>"
+              end
+            end
+          end
+        }
+      
+        puts "in #{row_incoming}"
+        puts "ot #{row_outgoing}"
+      
+        table_index += 2
+        i += 5
       }
       
+      table[0].length.times{ |col|
+        puts "col ||| #{col}"
+        i = 1
+        inside = false
+        first_inside = true
+        (table.length/2).times{ |row|
+          row_ix = row * 2
+          incoming = table[row_ix][col]
+          outgoing = table[row_ix+1][col]
+          # puts "in #{incoming}"
+          # puts "out #{outgoing}"
+          if incoming != 0
+            inside = false
+            first_inside = true
+          end
+          if outgoing != 0
+            inside = true
+          end
+          # break if i+4 > plot.length - 1
+          if inside
+            if first_inside
+              # plot[i][ix] = " v "
+              # plot[i+1][ix] = " v "
+              # plot[i+2][ix] = " v "
+              plot[i+3][col] = " v "
+              plot[i+4][col] = " v "
+              first_inside = false
+            else
+              5.times{|r|
+                if plot[i+r][col] == "   "
+                  plot[i+r][col] = " v "
+                elsif plot[i+r][col] == ">>>"
+                  plot[i+r][col] = ">+>"
+                elsif plot[i+r][col] == "<<<"
+                  plot[i+r][col] = "<+<"
+                end
+              }  
+            end
+          end
+          # puts " #{plot[i][col]}"
+          # puts " #{plot[i+1][col]}"
+          # puts " #{plot[i+2][col]}"
+          # puts " #{plot[i+3][col]}"
+          # puts " #{plot[i+4][col]}"
+          # puts "col"
+          # gets
+          i += 5
+        }
+      }
+
       # puts "PLOT"
       # plot.each{ |r|
       #   puts r.join
@@ -418,92 +426,92 @@ class ProjectsController < ApplicationController
 
 
 
-      # def collision(r1, r2)
-      #   if r1.length != r2.length
-      #     nil
-      #   end
-      #   r1.zip(r2).each{ |c1, c2| 
-      #     if c1 == "<<<" || c1 == "<< " || c1 == "<+<" || c1 == "---" || c1 == "<v<"
-      #       if c2 == ">>>" || c2 == ">> " || c2 == ">+>" || c2 == "---" || c2 == ">v>" || c2 == "<<<" || c2 == "<< " || c2 == "<+<" || c2 == "---" || c2 == "<v<"
-      #         puts "c1 #{c1} c2 #{c2}"
-      #         return true
-      #       end
-      #     end
-      #   }
-      #   return false
-      # end
+      def collision(r1, r2)
+        if r1.length != r2.length
+          nil
+        end
+        r1.zip(r2).each{ |c1, c2| 
+          if c1 == "<<<" || c1 == "<< " || c1 == "<+<" || c1 == "---" || c1 == "<v<"
+            if c2 == ">>>" || c2 == ">> " || c2 == ">+>" || c2 == "---" || c2 == ">v>" || c2 == "<<<" || c2 == "<< " || c2 == "<+<" || c2 == "---" || c2 == "<v<"
+              puts "c1 #{c1} c2 #{c2}"
+              return true
+            end
+          end
+        }
+        return false
+      end
       
-      # i = 7
+      i = 7
       
-      # while i < plot.length 
-      #   j = i - 1
-      #   k = j - 3
-      #   puts "Node #{plot[i].select{|x| x.class == Integer}}"
-      #   until collision(plot[j], plot[k])
-      #     k -= 1
-      #   end
-      #   puts "Shift to #{k}"
+      while i < plot.length 
+        j = i - 1
+        k = j - 3
+        puts "Node #{plot[i].select{|x| x.class == Integer}}"
+        until collision(plot[j], plot[k])
+          k -= 1
+        end
+        puts "Shift to #{k}"
       
-      #   node_col = plot[i].index{|x| x.class == Integer}
+        node_col = plot[i].index{|x| x.class == Integer}
       
-      #   rowstodelete = j - k
-      #   k += 3
+        rowstodelete = j - k
+        k += 3
       
-      #   if k < i-1
-      #     puts "DO SHIFT!"
-      #     # Destination
+        if k < i-1
+          puts "DO SHIFT!"
+          # Destination
       
-      #     m1 = node_col
-      #     while plot[i-1][m1] == "<v<" || plot[i-1][m1] == "<< " || plot[i-1][m1] == "---" || plot[i-1][m1] == "<+<" || plot[i-1][m1] == "   " || plot[i-1][m1] == "<<<" 
-      #       plot[k][m1] = plot[i-1][m1]
-      #       plot[k+1][m1] = plot[i][m1]
-      #       m1 += 1
-      #     end
+          m1 = node_col
+          while plot[i-1][m1] == "<v<" || plot[i-1][m1] == "<< " || plot[i-1][m1] == "---" || plot[i-1][m1] == "<+<" || plot[i-1][m1] == "   " || plot[i-1][m1] == "<<<" 
+            plot[k][m1] = plot[i-1][m1]
+            plot[k+1][m1] = plot[i][m1]
+            m1 += 1
+          end
       
-      #     m2 = node_col
-      #     while plot[i+1][m2] == ">v>" || plot[i+1][m2] == ">> " || plot[i+1][m2] == "---" || plot[i+1][m2] == ">+>" || plot[i+1][m2] == "   " || plot[i+1][m2] == ">>>" || m2 < m1
-      #       plot[k+1][m2] = plot[i][m2]
-      #       plot[k+2][m2] = plot[i+1][m2]
-      #       (k+3..i+1).each{ |ix|
-      #         # puts "is #{ix}"
-      #         # puts "plot ix m #{plot[ix][m]}"
-      #         plot[ix][m2] = plot[i+2][m2]
-      #       }
-      #       m2 += 1
-      #     end
+          m2 = node_col
+          while plot[i+1][m2] == ">v>" || plot[i+1][m2] == ">> " || plot[i+1][m2] == "---" || plot[i+1][m2] == ">+>" || plot[i+1][m2] == "   " || plot[i+1][m2] == ">>>" || m2 < m1
+            plot[k+1][m2] = plot[i][m2]
+            plot[k+2][m2] = plot[i+1][m2]
+            (k+3..i+1).each{ |ix|
+              # puts "is #{ix}"
+              # puts "plot ix m #{plot[ix][m]}"
+              plot[ix][m2] = plot[i+2][m2]
+            }
+            m2 += 1
+          end
       
       
-      #     # plot[k] = plot[k][0...node_col] + plot[i-1][node_col..-1]
-      #     # plot[k+1] = plot[k+1][0...node_col] + plot[i][node_col..-1]
-      #     # plot[k+2] = plot[k+2][0...node_col] + plot[i+1][node_col..-1]
+          # plot[k] = plot[k][0...node_col] + plot[i-1][node_col..-1]
+          # plot[k+1] = plot[k+1][0...node_col] + plot[i][node_col..-1]
+          # plot[k+2] = plot[k+2][0...node_col] + plot[i+1][node_col..-1]
       
-      #     # plot.delete_at(i)
-      #     until plot[k+6].any?{|x| x.class == Integer}
-      #       # puts "DELETE xxxxxxx"
-      #       plot.delete_at(k+5)
-      #     end
+          # plot.delete_at(i)
+          until plot[k+6].any?{|x| x.class == Integer}
+            # puts "DELETE xxxxxxx"
+            plot.delete_at(k+5)
+          end
       
-      #     i = k+6
-      #     # gets
-      #     # break
-      #     # 5.times{plot.delete_at(i-1)}
-      #   else
-      #     # puts "DONT SHIFT"
-      #     i += 1
-      #     until plot[i].any?{|x| x.class == Integer}
-      #       i += 1
-      #       if i > plot.length - 1
-      #         break
-      #       end  
-      #     end
-      #     i+=5
-      #   end
+          i = k+6
+          # gets
+          # break
+          # 5.times{plot.delete_at(i-1)}
+        else
+          # puts "DONT SHIFT"
+          i += 1
+          until plot[i].any?{|x| x.class == Integer}
+            i += 1
+            if i > plot.length - 1
+              break
+            end  
+          end
+          i+=5
+        end
       
-      #   # puts "COMPRESSED PLOT STEP"
-      #   # plot.each{ |r|
-      #   #   puts r.join
-      #   # }
-      # end
+        # puts "COMPRESSED PLOT STEP"
+        # plot.each{ |r|
+        #   puts r.join
+        # }
+      end
 
       @grid = plot.transpose
       @root_n = Node.find_by(id: endnode)
